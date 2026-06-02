@@ -70,7 +70,7 @@ export default function NetworkInfoCard({
           <Row label="Region" value={info?.region} loading={loading} />
           <Row label="Country" value={info?.country} loading={loading} />
           <Row
-            label="Test Server"
+            label="Server"
             value={
               info
                 ? `${info.server.city}, ${info.server.country}`

@@ -28,8 +28,13 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# local IP geolocation databases (downloaded separately — see data/README.md)
-/data/*.mmdb
+# IP geolocation databases (DB-IP Lite).
+# The ASN DB (~9 MB, for ISP) IS bundled/deployed. The City DB (~124 MB) exceeds
+# Vercel's 100 MB per-file limit, so it's kept local-only (dev fallback); in
+# production city/region/country come from the platform's edge geo headers.
+/data/dbip-city-lite.mmdb
 
 # local editor/agent settings
 /.claude/
+
+.vercel

@@ -1,0 +1,12 @@
+# Excluded from Vercel uploads (Vercel builds + installs deps in the cloud).
+node_modules
+.next
+.git
+.claude
+.vercel
+*.log
+
+# The City DB (~124 MB) exceeds Vercel's 100 MB per-file limit — keep it local.
+# The ASN DB (~9 MB) is intentionally NOT ignored, so ISP lookup works in prod.
+data/dbip-city-lite.mmdb
+data/*.mmdb.gz
