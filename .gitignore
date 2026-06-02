@@ -30,3 +30,6 @@ next-env.d.ts
 
 # local IP geolocation databases (downloaded separately — see data/README.md)
 /data/*.mmdb
+
+# local editor/agent settings
+/.claude/
