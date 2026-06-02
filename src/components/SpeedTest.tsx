@@ -154,13 +154,14 @@ export default function SpeedTest() {
         : phase === 'ping'
           ? 'Latency'
           : phase === 'done'
-            ? 'Download'
+            ? 'Complete'
             : phase === 'finding-server'
               ? 'Connecting'
               : 'Ready';
 
-  // On completion show the download figure on the dial as the headline metric.
-  const gaugeValue = phase === 'done' ? (results.download ?? 0) : gauge;
+  // When the test finishes, the dial resets to zero — the final figures are
+  // shown in the result cards below.
+  const gaugeValue = phase === 'done' ? 0 : gauge;
   const gaugeUnitDisplay = phase === 'done' ? 'Mbps' : gaugeUnit;
 
   return (
