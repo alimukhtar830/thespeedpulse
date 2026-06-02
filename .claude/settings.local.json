@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "PowerShell($idx = Invoke-RestMethod -Uri \"https://nodejs.org/dist/index.json\"; $lts = $idx | Where-Object { $_.lts } | Select-Object -First 1; Write-Output \"Latest LTS: $\\($lts.version\\)\"; Write-Output \"Files include zip: $\\($lts.files -contains 'win-x64-zip'\\)\")",
+      "PowerShell($ver = \"v24.16.0\"; $url = \"https://nodejs.org/dist/$ver/node-$ver-win-x64.zip\"; $zip = \"$env:TEMP\\\\node-$ver.zip\"; $dest = \"C:\\\\Users\\\\Dell\\\\nodejs\"; Write-Output \"Downloading $url\"; Invoke-WebRequest -Uri $url -OutFile $zip; Write-Output \"Downloaded $\\(\\(Get-Item $zip\\).Length\\) bytes\"; if \\(Test-Path $dest\\) { Remove-Item -Recurse -Force $dest }; Expand-Archive -Path $zip -DestinationPath $dest -Force; Write-Output \"Extracted to $dest\"; Get-ChildItem $dest)",
+      "PowerShell($nodeDir = \"C:\\\\Users\\\\Dell\\\\nodejs\\\\node-v24.16.0-win-x64\"; $env:Path = \"$nodeDir;$env:Path\"; node --version; npm --version; Write-Output \"node path: $\\(\\(Get-Command node\\).Source\\)\")",
+      "PowerShell($env:Path = \"C:\\\\Users\\\\Dell\\\\nodejs\\\\node-v24.16.0-win-x64;$env:Path\"; npm view next@'>=14.2.5 <15' version | Select-Object -Last 5)",
+      "PowerShell($env:Path = \"C:\\\\Users\\\\Dell\\\\nodejs\\\\node-v24.16.0-win-x64;$env:Path\"; npm install --no-audit --no-fund; Write-Output \"--- BUILD ---\"; npm run build)",
+      "PowerShell($env:Path = \"C:\\\\Users\\\\Dell\\\\nodejs\\\\node-v24.16.0-win-x64;$env:Path\"; npm run start)",
+      "PowerShell($env:Path = \"C:\\\\Users\\\\Dell\\\\nodejs\\\\node-v24.16.0-win-x64;$env:Path\"; npm run build 2>&1 | Select-Object -Last 12; Write-Output \"--- tooling ---\"; Write-Output \"git: $\\(\\(Get-Command git -ErrorAction SilentlyContinue\\).Source\\)\"; Write-Output \"vercel: $\\(\\(Get-Command vercel -ErrorAction SilentlyContinue\\).Source\\)\")"
+    ]
+  }
+}
