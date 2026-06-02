@@ -151,9 +151,9 @@ export default function Speedometer({
         {/* Tick marks + labels */}
         {MARKS.map((mark, i) => {
           const tickAngle = START_ANGLE + (i / (MARKS.length - 1)) * SWEEP;
-          const outer = polar(CX, CY, R - 20, tickAngle);
-          const inner = polar(CX, CY, R - 30, tickAngle);
-          const labelPos = polar(CX, CY, R - 44, tickAngle);
+          const outer = polar(CX, CY, R - 18, tickAngle);
+          const inner = polar(CX, CY, R - 28, tickAngle);
+          const labelPos = polar(CX, CY, R - 38, tickAngle);
           return (
             <g key={mark}>
               <line
@@ -168,7 +168,7 @@ export default function Speedometer({
                 x={labelPos.x}
                 y={labelPos.y}
                 fill="rgba(255,255,255,0.45)"
-                fontSize={9}
+                fontSize={8}
                 textAnchor="middle"
                 dominantBaseline="middle"
               >
@@ -191,21 +191,22 @@ export default function Speedometer({
         <circle cx={CX} cy={CY} r={4} fill="#22d3ee" />
       </svg>
 
-      {/* Center readout (HTML overlay for crisp typography) */}
-      <div className="pointer-events-none absolute inset-x-0 bottom-[18%] flex flex-col items-center">
+      {/* Center readout (HTML overlay for crisp typography). Stacked + sized to
+          sit in the dial's open lower wedge, clear of the side tick labels. */}
+      <div className="pointer-events-none absolute inset-x-0 top-[57%] flex flex-col items-center">
         <span
-          className={`text-xs uppercase tracking-[0.2em] ${
+          className={`text-[10px] uppercase tracking-[0.2em] sm:text-xs ${
             active ? 'text-cyan-400 animate-pulse-glow' : 'text-slate-400'
           }`}
         >
           {caption}
         </span>
-        <div className="flex items-baseline gap-1">
-          <motion.span className="text-5xl font-bold tabular-nums text-white sm:text-6xl">
-            {text}
-          </motion.span>
-          <span className="text-lg font-medium text-slate-400">{unit}</span>
-        </div>
+        <motion.span className="text-4xl font-bold leading-none tabular-nums text-white sm:text-5xl">
+          {text}
+        </motion.span>
+        <span className="mt-0.5 text-xs font-medium text-slate-400 sm:text-sm">
+          {unit}
+        </span>
       </div>
     </div>
   );
