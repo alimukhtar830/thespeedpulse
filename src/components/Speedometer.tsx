@@ -77,19 +77,18 @@ export default function Speedometer({
 }: SpeedometerProps) {
   const trackPath = describeArc(CX, CY, R, START_ANGLE, START_ANGLE + SWEEP);
 
+  // Spring tuned for smooth, low-overshoot motion (avoids needle wobble).
+  const springCfg = { stiffness: 70, damping: 20, mass: 0.7 };
+
   // --- Needle rotation (spring-eased) ---
   const targetAngle = START_ANGLE + valueToFraction(value) * SWEEP;
-  const angle = useSpring(START_ANGLE, {
-    stiffness: 90,
-    damping: 16,
-    mass: 0.6,
-  });
+  const angle = useSpring(START_ANGLE, springCfg);
   useEffect(() => {
     angle.set(targetAngle);
   }, [targetAngle, angle]);
 
   // --- Progress arc length (fraction of the track) ---
-  const fraction = useSpring(0, { stiffness: 90, damping: 16, mass: 0.6 });
+  const fraction = useSpring(0, springCfg);
   useEffect(() => {
     fraction.set(valueToFraction(value));
   }, [value, fraction]);
@@ -124,13 +123,6 @@ export default function Speedometer({
             <stop offset="50%" stopColor="#3b82f6" />
             <stop offset="100%" stopColor="#8b5cf6" />
           </linearGradient>
-          <filter id="arcGlow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="4" result="blur" />
-            <feMerge>
-              <feMergeNode in="blur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
         </defs>
 
         {/* Track */}
@@ -142,16 +134,18 @@ export default function Speedometer({
           strokeLinecap="round"
         />
 
-        {/* Animated progress arc */}
+        {/* Animated progress arc (glow via cheap GPU drop-shadow) */}
         <motion.path
           d={trackPath}
           fill="none"
           stroke="url(#arcGradient)"
           strokeWidth={14}
           strokeLinecap="round"
-          filter="url(#arcGlow)"
           strokeDasharray={ARC_LEN}
-          style={{ strokeDashoffset: dashOffset }}
+          style={{
+            strokeDashoffset: dashOffset,
+            filter: 'drop-shadow(0 0 5px rgba(34,211,238,0.45))',
+          }}
         />
 
         {/* Tick marks + labels */}
@@ -184,24 +178,14 @@ export default function Speedometer({
           );
         })}
 
-        {/* Needle (rotates about the gauge center) */}
-        <motion.g
-          style={{
-            rotate: angle,
-            transformBox: 'view-box',
-            transformOrigin: `${CX}px ${CY}px`,
-          }}
-        >
-          <line
-            x1={CX}
-            y1={CY}
-            x2={CX}
-            y2={CY - R + 14}
-            stroke="#e2e8f0"
-            strokeWidth={3}
-            strokeLinecap="round"
-          />
-        </motion.g>
+        {/* Needle — a tapered polygon whose bbox bottom-center sits on the hub.
+            Rotating about originX:0.5/originY:1 (bbox-relative) is robust when the
+            SVG is responsively scaled, unlike a pixel transform-origin. */}
+        <motion.polygon
+          points={`${CX},${CY - R + 16} ${CX - 5},${CY} ${CX + 5},${CY}`}
+          fill="#e2e8f0"
+          style={{ rotate: angle, originX: 0.5, originY: 1 }}
+        />
         {/* Hub */}
         <circle cx={CX} cy={CY} r={10} fill="#0f1430" stroke="#22d3ee" strokeWidth={2} />
         <circle cx={CX} cy={CY} r={4} fill="#22d3ee" />

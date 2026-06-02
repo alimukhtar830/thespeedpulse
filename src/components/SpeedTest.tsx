@@ -97,13 +97,23 @@ export default function SpeedTest() {
       setResults((r) => ({ ...r, ping: ping.ping, jitter: ping.jitter }));
       setGauge(ping.ping);
 
+      // Exponential moving average smooths the inherently noisy instantaneous
+      // samples so the gauge glides instead of jumping on every reading.
+      const smoother = () => {
+        let s = 0;
+        return (mbps: number) => {
+          s = s === 0 ? mbps : s + 0.3 * (mbps - s);
+          setGauge(s);
+        };
+      };
+
       // 3) Download.
       setPhase('download');
       setGaugeUnit('Mbps');
       setGauge(0);
       const download = await measureDownload({
         signal,
-        onProgress: (mbps) => setGauge(mbps),
+        onProgress: smoother(),
       });
       setResults((r) => ({ ...r, download }));
       setGauge(download);
@@ -113,7 +123,7 @@ export default function SpeedTest() {
       setGauge(0);
       const upload = await measureUpload({
         signal,
-        onProgress: (mbps) => setGauge(mbps),
+        onProgress: smoother(),
       });
       setResults((r) => ({ ...r, upload }));
       setGauge(upload);
