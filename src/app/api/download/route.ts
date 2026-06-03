@@ -56,6 +56,20 @@ export async function GET(req: NextRequest) {
       'Content-Length': String(totalBytes),
       'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0, no-transform',
       Pragma: 'no-cache',
+      // Allow cross-origin reads so we can shard downloads across subdomains.
+      'Access-Control-Allow-Origin': '*',
+    },
+  });
+}
+
+export function OPTIONS() {
+  return new Response(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'GET, OPTIONS',
+      'Access-Control-Allow-Headers': '*',
+      'Access-Control-Max-Age': '86400',
     },
   });
 }

@@ -33,12 +33,34 @@ export async function POST(req: NextRequest) {
   } catch {
     return NextResponse.json(
       { ok: false, error: 'upload-read-failed' },
-      { status: 400, headers: { 'Cache-Control': 'no-store' } },
+      {
+        status: 400,
+        headers: { 'Cache-Control': 'no-store', 'Access-Control-Allow-Origin': '*' },
+      },
     );
   }
 
   return NextResponse.json(
     { ok: true, bytes: received },
-    { status: 200, headers: { 'Cache-Control': 'no-store, no-cache, max-age=0' } },
+    {
+      status: 200,
+      headers: {
+        'Cache-Control': 'no-store, no-cache, max-age=0',
+        // Allow cross-origin POSTs so we can shard uploads across subdomains.
+        'Access-Control-Allow-Origin': '*',
+      },
+    },
   );
+}
+
+export function OPTIONS() {
+  return new Response(null, {
+    status: 204,
+    headers: {
+      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Methods': 'POST, OPTIONS',
+      'Access-Control-Allow-Headers': '*',
+      'Access-Control-Max-Age': '86400',
+    },
+  });
 }

@@ -1,10 +1,26 @@
 import type { ProgressCallback } from './types';
+import { shardHost, shardingAvailable } from './shard';
 
 function cacheBust(): string {
   return `${Date.now()}-${Math.floor(Math.random() * 1e9)}`;
 }
 
 const MB = 1024 * 1024;
+
+/** Probe a shard subdomain once; fall back to same-origin if unreachable. */
+async function shardsReachable(probeBody: BodyInit): Promise<boolean> {
+  if (!shardingAvailable()) return false;
+  try {
+    const res = await fetch(`${shardHost(0)}/api/upload?cb=${cacheBust()}`, {
+      method: 'POST',
+      cache: 'no-store',
+      body: probeBody,
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
 
 /**
  * Build a random payload once and reuse it across requests. Random (vs. zeros)
@@ -38,16 +54,17 @@ interface UploadOptions {
 export async function measureUpload({
   durationMs = 8000,
   warmupMs = 1500,
-  streams = 4,
+  streams = 6,
   onProgress,
   signal,
 }: UploadOptions = {}): Promise<number> {
   const payloadBytes = 2 * MB;
-  // Build the random payload once and wrap it in a Blob (a correctly-typed,
-  // reusable fetch body). The data is reused across all requests.
-  const payload = new Blob([makePayload(payloadBytes)], {
-    type: 'application/octet-stream',
-  });
+  // Build the random payload once. Label it text/plain so cross-origin POSTs to
+  // shard subdomains are "simple requests" (no CORS preflight). The bytes are
+  // still random/incompressible; the server only counts them.
+  const payload = new Blob([makePayload(payloadBytes)], { type: 'text/plain' });
+
+  const useShards = await shardsReachable(payload);
 
   let totalBytes = 0;
   let warmupBytes = 0;
@@ -77,13 +94,14 @@ export async function measureUpload({
     }
   }, 150);
 
-  async function uploadWorker() {
+  async function uploadWorker(index: number) {
+    const base = useShards ? shardHost(index) : '';
     while (performance.now() < endTime && !controller.signal.aborted) {
       try {
-        const res = await fetch(`/api/upload?cb=${cacheBust()}`, {
+        // No custom headers + text/plain body => simple request, no preflight.
+        const res = await fetch(`${base}/api/upload?cb=${cacheBust()}`, {
           method: 'POST',
           cache: 'no-store',
-          headers: { 'Content-Type': 'application/octet-stream' },
           body: payload,
           signal: controller.signal,
         });
@@ -98,7 +116,7 @@ export async function measureUpload({
   }
 
   try {
-    await Promise.all(Array.from({ length: streams }, () => uploadWorker()));
+    await Promise.all(Array.from({ length: streams }, (_, i) => uploadWorker(i)));
   } finally {
     clearInterval(sampler);
     signal?.removeEventListener('abort', onAbort);
