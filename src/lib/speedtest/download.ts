@@ -1,11 +1,25 @@
 import type { ProgressCallback } from './types';
-import { endpoints } from './endpoints';
+import { shardHost, shardingAvailable } from './shard';
 
 function cacheBust(): string {
   return `${Date.now()}-${Math.floor(Math.random() * 1e9)}`;
 }
 
 const MB = 1024 * 1024;
+
+/** Probe a shard subdomain once; if it isn't reachable, fall back to same-origin. */
+async function shardsReachable(): Promise<boolean> {
+  if (!shardingAvailable()) return false;
+  try {
+    const res = await fetch(`${shardHost(0)}/api/download?bytes=16&cb=${cacheBust()}`, {
+      cache: 'no-store',
+    });
+    await res.arrayBuffer();
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
 
 interface DownloadOptions {
   /** Total measurement window in ms (excludes warm-up). */
@@ -76,15 +90,18 @@ export async function measureDownload({
     }
   }, 150);
 
-  const downloadUrl = endpoints().download;
+  // Decide once whether to spread streams across subdomains (separate HTTP/2
+  // connections) — the single biggest factor for browser throughput on high-RTT links.
+  const useShards = await shardsReachable();
 
   /** A single continuous download stream that keeps fetching chunks until time is up. */
-  async function streamWorker() {
+  async function streamWorker(index: number) {
+    const base = useShards ? shardHost(index) : '';
     while (performance.now() < endTime && !controller.signal.aborted) {
       const reqBytes = Math.min(chunkBytes, maxChunk);
       try {
         const res = await fetch(
-          `${downloadUrl}?bytes=${reqBytes}&cb=${cacheBust()}`,
+          `${base}/api/download?bytes=${reqBytes}&cb=${cacheBust()}`,
           { cache: 'no-store', signal: controller.signal },
         );
         if (!res.ok || !res.body) throw new Error(`HTTP ${res.status}`);
@@ -117,7 +134,7 @@ export async function measureDownload({
   }
 
   try {
-    await Promise.all(Array.from({ length: streams }, () => streamWorker()));
+    await Promise.all(Array.from({ length: streams }, (_, i) => streamWorker(i)));
   } finally {
     clearInterval(sampler);
     signal?.removeEventListener('abort', onAbort);
