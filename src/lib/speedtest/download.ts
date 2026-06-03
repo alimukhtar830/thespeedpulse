@@ -29,9 +29,9 @@ interface DownloadOptions {
  *   cannot return stale bytes and inflate the measurement.
  */
 export async function measureDownload({
-  durationMs = 8000,
-  warmupMs = 1500,
-  streams = 6,
+  durationMs = 9000,
+  warmupMs = 1000,
+  streams = 8,
   onProgress,
   signal,
 }: DownloadOptions = {}): Promise<number> {
@@ -45,9 +45,10 @@ export async function measureDownload({
   const endTime = startTime + warmupMs + durationMs;
   const warmupEndTime = startTime + warmupMs;
 
-  // Adaptive chunk size, shared across streams (starts modest, grows).
-  let chunkBytes = 2 * MB;
-  const maxChunk = 32 * MB;
+  // Adaptive chunk size, shared across streams. Start larger to avoid wasting
+  // the high-latency window on small ramp-up requests.
+  let chunkBytes = 8 * MB;
+  const maxChunk = 48 * MB;
 
   const controller = new AbortController();
   const onAbort = () => controller.abort();

@@ -5,9 +5,9 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 const MB = 1024 * 1024;
-const MAX_BYTES = 64 * MB; // safety cap per request
+const MAX_BYTES = 96 * MB; // safety cap per request
 const DEFAULT_BYTES = 8 * MB;
-const BLOCK = 256 * 1024; // 256 KB streaming block
+const BLOCK = 1024 * 1024; // 1 MB streaming block (fewer pulls => less overhead)
 
 /**
  * Streams `bytes` of FRESH random data (a new random block per chunk) with

@@ -203,22 +203,20 @@ export default function Speedometer({
         <circle cx={CX} cy={CY} r={5} fill="#22d3ee" style={{ filter: 'drop-shadow(0 0 4px rgba(34,211,238,0.8))' }} />
       </svg>
 
-      {/* Center readout (HTML overlay for crisp typography). Stacked + sized to
-          sit in the dial's open lower wedge, clear of the side tick labels. */}
-      <div className="pointer-events-none absolute inset-x-0 top-[57%] flex flex-col items-center">
+      {/* Center readout (HTML overlay for crisp typography). Positioned in the
+          dial's open lower wedge, below the hub/needle and clear of tick labels. */}
+      <div className="pointer-events-none absolute inset-x-0 top-[64%] flex flex-col items-center">
         <span
-          className={`text-[10px] uppercase tracking-[0.2em] sm:text-xs ${
+          className={`text-[10px] uppercase tracking-[0.18em] ${
             active ? 'text-cyan-400 animate-pulse-glow' : 'text-slate-400'
           }`}
         >
           {caption}
         </span>
-        <motion.span className="text-4xl font-bold leading-none tabular-nums text-white sm:text-5xl">
+        <motion.span className="text-3xl font-bold leading-none tabular-nums text-white sm:text-4xl">
           {text}
         </motion.span>
-        <span className="mt-0.5 text-xs font-medium text-slate-400 sm:text-sm">
-          {unit}
-        </span>
+        <span className="text-xs font-medium text-slate-400">{unit}</span>
       </div>
     </div>
   );
