@@ -65,13 +65,15 @@ export default function NetworkInfoCard({
         <h3 className="text-lg font-semibold text-white">Network Information</h3>
       </div>
 
-      <div className="grid gap-x-8 sm:grid-cols-2">
-        <div>
+      {/* grid-cols-1 (clamped minmax(0,1fr)) on mobile so the column can't grow
+          to the longest value's width and overflow; min-w-0 in Row then truncates. */}
+      <div className="grid grid-cols-1 gap-x-8 sm:grid-cols-2">
+        <div className="min-w-0">
           <Row label="Public IP" value={info?.ip} loading={loading} />
           <Row label="ISP / Provider" value={info?.isp} loading={loading} />
           <Row label="City" value={info?.city} loading={loading} />
         </div>
-        <div>
+        <div className="min-w-0">
           <Row label="Region" value={info?.region} loading={loading} />
           <Row label="Country" value={info?.country} loading={loading} />
           <Row
