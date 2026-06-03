@@ -39,6 +39,15 @@ interface Results {
 
 const EMPTY: Results = { download: null, upload: null, ping: null, jitter: null };
 
+// Common consumer plan tiers (Mbps). ISPs usually provision slightly above the
+// real-world speed, so we map a measured speed to the nearest standard tier at
+// or above ~90% of it. This is an ESTIMATE, clearly labelled in the UI.
+const PLAN_TIERS = [2, 5, 10, 15, 20, 25, 30, 40, 50, 75, 100, 150, 200, 250, 300, 500, 750, 1000];
+function estimatePlan(downloadMbps: number): number {
+  const target = downloadMbps * 0.9;
+  return PLAN_TIERS.find((t) => t >= target) ?? PLAN_TIERS[PLAN_TIERS.length - 1];
+}
+
 /**
  * Client orchestrator for the full speed-test flow:
  * finding-server → ping → download → upload → done. Drives the live gauge and
@@ -53,6 +62,7 @@ export default function SpeedTest() {
   const [netLoading, setNetLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [shared, setShared] = useState(false);
+  const [dataUsedMB, setDataUsedMB] = useState<number | null>(null);
   const workerRef = useRef<Worker | null>(null);
 
   const running = !['idle', 'done', 'error'].includes(phase);
@@ -113,6 +123,7 @@ export default function SpeedTest() {
     setError(null);
     setResults(EMPTY);
     setGauge(0);
+    setDataUsedMB(null);
     setPhase('finding-server');
     setGaugeUnit('Mbps');
 
@@ -154,6 +165,9 @@ export default function SpeedTest() {
         case 'result':
           setResults((r) => ({ ...r, [m.key]: m.value }));
           setGauge(m.value);
+          break;
+        case 'data':
+          setDataUsedMB(m.bytes / (1024 * 1024));
           break;
         case 'done':
           setPhase('done');
@@ -298,6 +312,30 @@ export default function SpeedTest() {
           delay={0.15}
         />
       </div>
+
+      {/* Test summary: data used + estimated plan (shown on completion) */}
+      {phase === 'done' && (dataUsedMB !== null || results.download !== null) && (
+        <div className="flex w-full flex-wrap justify-center gap-3 text-sm">
+          {dataUsedMB !== null && (
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-slate-300">
+              <span className="text-cyan-400">Data used</span>
+              <span className="font-semibold text-white">
+                {dataUsedMB >= 1024
+                  ? `${(dataUsedMB / 1024).toFixed(2)} GB`
+                  : `${dataUsedMB.toFixed(0)} MB`}
+              </span>
+            </span>
+          )}
+          {results.download !== null && (
+            <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/[0.03] px-4 py-2 text-slate-300">
+              <span className="text-violet">Estimated plan</span>
+              <span className="font-semibold text-white">
+                ~{estimatePlan(results.download)} Mbps
+              </span>
+            </span>
+          )}
+        </div>
+      )}
 
       {/* Network information */}
       <div className="w-full">

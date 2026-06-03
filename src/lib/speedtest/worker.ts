@@ -29,14 +29,17 @@ self.onmessage = async (e: MessageEvent<InMsg>) => {
     const download = await measureDownload({
       onProgress: (m) => post({ type: 'progress', metric: 'download', value: m }),
     });
-    post({ type: 'result', key: 'download', value: download });
+    post({ type: 'result', key: 'download', value: download.mbps });
 
     // Upload
     post({ type: 'phase', phase: 'upload' });
     const upload = await measureUpload({
       onProgress: (m) => post({ type: 'progress', metric: 'upload', value: m }),
     });
-    post({ type: 'result', key: 'upload', value: upload });
+    post({ type: 'result', key: 'upload', value: upload.mbps });
+
+    // Total data the test consumed (download + upload bytes on the wire).
+    post({ type: 'data', bytes: download.bytes + upload.bytes });
 
     post({ type: 'done' });
   } catch (err) {

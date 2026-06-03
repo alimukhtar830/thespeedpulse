@@ -57,7 +57,7 @@ export async function measureUpload({
   streams = 6,
   onProgress,
   signal,
-}: UploadOptions = {}): Promise<number> {
+}: UploadOptions = {}): Promise<{ mbps: number; bytes: number }> {
   const payloadBytes = 2 * MB;
   // Build the random payload once. Label it text/plain so cross-origin POSTs to
   // shard subdomains are "simple requests" (no CORS preflight). The bytes are
@@ -135,5 +135,5 @@ export async function measureUpload({
     throw new Error('Upload test failed — no data transferred.');
   }
 
-  return Math.round(mbps * 100) / 100;
+  return { mbps: Math.round(mbps * 100) / 100, bytes: totalBytes };
 }

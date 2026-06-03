@@ -49,7 +49,7 @@ export async function measureDownload({
   streams = 16,
   onProgress,
   signal,
-}: DownloadOptions = {}): Promise<number> {
+}: DownloadOptions = {}): Promise<{ mbps: number; bytes: number }> {
   let totalBytes = 0;
   // Bytes/time captured at the end of the warm-up window — the final speed is
   // computed only from data transferred after this point.
@@ -153,5 +153,6 @@ export async function measureDownload({
     throw new Error('Download test failed — no data transferred.');
   }
 
-  return Math.round(mbps * 100) / 100;
+  // `bytes` is the TOTAL transferred (incl. warm-up) — what the data plan is charged.
+  return { mbps: Math.round(mbps * 100) / 100, bytes: totalBytes };
 }
