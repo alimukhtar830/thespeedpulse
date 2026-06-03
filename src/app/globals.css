@@ -10,8 +10,13 @@ html {
   scroll-behavior: smooth;
 }
 
+html {
+  overflow-x: hidden; /* guard against any element causing horizontal scroll on mobile */
+}
+
 body {
   @apply bg-navy-950 text-slate-100 antialiased;
+  overflow-x: hidden;
   background-image:
     radial-gradient(circle at 15% 0%, rgba(34, 211, 238, 0.12), transparent 45%),
     radial-gradient(circle at 85% 10%, rgba(139, 92, 246, 0.14), transparent 45%),

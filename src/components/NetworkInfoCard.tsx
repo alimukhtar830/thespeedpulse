@@ -27,12 +27,17 @@ function Row({
   loading: boolean;
 }) {
   return (
-    <div className="flex items-center justify-between gap-4 border-b border-white/5 py-3 last:border-0">
-      <span className="text-sm text-slate-400">{label}</span>
+    <div className="flex items-center justify-between gap-3 border-b border-white/5 py-3 last:border-0">
+      <span className="shrink-0 text-sm text-slate-400">{label}</span>
       {loading ? (
-        <span className="h-4 w-28 animate-pulse rounded bg-white/10" />
+        <span className="h-4 w-24 animate-pulse rounded bg-white/10" />
       ) : (
-        <span className="max-w-[60%] truncate text-right text-sm font-medium text-white">
+        // min-w-0 lets this flex item shrink so long values (IP/ISP) truncate
+        // instead of forcing the card wider than the screen.
+        <span
+          className="min-w-0 truncate text-right text-sm font-medium text-white"
+          title={value}
+        >
           {value || '—'}
         </span>
       )}
