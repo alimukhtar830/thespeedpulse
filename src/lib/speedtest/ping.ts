@@ -61,7 +61,10 @@ export async function measurePing({
 
     const start = performance.now();
     try {
-      await fetch(`/api/ping?cb=${cacheBust()}`, {
+      // Ping a STATIC edge asset (served from the nearest CDN POP) rather than a
+      // serverless function — this measures true network round-trip latency and
+      // avoids the extra edge→function hop that roughly doubled the figure.
+      await fetch(`/ping.txt?cb=${cacheBust()}`, {
         method: 'GET',
         cache: 'no-store',
         signal: controller.signal,
