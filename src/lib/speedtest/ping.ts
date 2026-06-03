@@ -1,4 +1,5 @@
 import type { PingResult } from './types';
+import { endpoints } from './endpoints';
 
 /** Unique cache-busting token (avoids cached responses skewing timing). */
 function cacheBust(): string {
@@ -61,10 +62,9 @@ export async function measurePing({
 
     const start = performance.now();
     try {
-      // Ping a STATIC edge asset (served from the nearest CDN POP) rather than a
-      // serverless function — this measures true network round-trip latency and
-      // avoids the extra edge→function hop that roughly doubled the figure.
-      await fetch(`/ping.txt?cb=${cacheBust()}`, {
+      // Ping the edge endpoint (Cloudflare Worker at the nearest PoP, or the
+      // same-origin fallback) to measure true network round-trip latency.
+      await fetch(`${endpoints().ping}?cb=${cacheBust()}`, {
         method: 'GET',
         cache: 'no-store',
         signal: controller.signal,
