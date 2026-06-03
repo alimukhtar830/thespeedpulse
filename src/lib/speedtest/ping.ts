@@ -85,8 +85,11 @@ export async function measurePing({
     throw new Error('Ping test failed — no successful samples.');
   }
 
+  // Use the minimum RTT as the representative latency (closest to true network
+  // latency, excluding scheduling/jitter spikes); jitter still uses all samples.
+  const best = Math.min(...samples);
   return {
-    ping: Math.round(median(samples) * 10) / 10,
+    ping: Math.round(best * 10) / 10,
     jitter: Math.round(computeJitter(samples) * 10) / 10,
     samples,
   };

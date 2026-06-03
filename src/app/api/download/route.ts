@@ -9,18 +9,17 @@ const MAX_BYTES = 64 * MB; // safety cap per request
 const DEFAULT_BYTES = 8 * MB;
 const BLOCK = 256 * 1024; // 256 KB streaming block
 
-// One pre-filled random block, reused across responses. Random (not zeroed)
-// data is incompressible, so the measured size reflects real bytes on the wire.
-const randomBlock = new Uint8Array(BLOCK);
-randomFillSync(randomBlock);
-
 /**
- * Streams `bytes` of incompressible random data with caching fully disabled.
- * The client times how long the transfer takes to compute download speed.
+ * Streams `bytes` of FRESH random data (a new random block per chunk) with
+ * caching disabled. Fresh-per-chunk randomness is critical: the edge (Vercel)
+ * applies Brotli compression regardless of `no-transform`, and a *reused* block
+ * would compress to almost nothing — making the client over-count throughput by
+ * 10×+. Truly random data is incompressible, so bytes-on-wire ≈ bytes-decoded
+ * and the measurement is accurate.
  *
  * Query params:
  *   - bytes: number of bytes to send (clamped to MAX_BYTES)
- *   - cb:    cache-busting token (ignored server-side, defeats caches)
+ *   - cb:    cache-busting token (defeats any cache)
  */
 export async function GET(req: NextRequest) {
   const param = Number(req.nextUrl.searchParams.get('bytes'));
@@ -36,11 +35,12 @@ export async function GET(req: NextRequest) {
         controller.close();
         return;
       }
-      const remaining = totalBytes - sent;
-      const chunk =
-        remaining >= BLOCK ? randomBlock : randomBlock.subarray(0, remaining);
+      const size = Math.min(BLOCK, totalBytes - sent);
+      // allocUnsafe is fine — randomFillSync overwrites every byte.
+      const chunk = Buffer.allocUnsafe(size);
+      randomFillSync(chunk);
       controller.enqueue(chunk);
-      sent += chunk.length;
+      sent += size;
     },
   });
 
@@ -49,7 +49,6 @@ export async function GET(req: NextRequest) {
     headers: {
       'Content-Type': 'application/octet-stream',
       'Content-Length': String(totalBytes),
-      // `no-transform` also prevents any proxy from compressing the payload.
       'Cache-Control': 'no-store, no-cache, must-revalidate, max-age=0, no-transform',
       Pragma: 'no-cache',
     },

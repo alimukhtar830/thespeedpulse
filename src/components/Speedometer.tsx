@@ -120,8 +120,13 @@ export default function Speedometer({
         <defs>
           <linearGradient id="arcGradient" x1="0%" y1="0%" x2="100%" y2="100%">
             <stop offset="0%" stopColor="#22d3ee" />
-            <stop offset="50%" stopColor="#3b82f6" />
-            <stop offset="100%" stopColor="#8b5cf6" />
+            <stop offset="45%" stopColor="#38bdf8" />
+            <stop offset="75%" stopColor="#6366f1" />
+            <stop offset="100%" stopColor="#a855f7" />
+          </linearGradient>
+          <linearGradient id="needleGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stopColor="#ffffff" />
+            <stop offset="100%" stopColor="#cbd5e1" />
           </linearGradient>
         </defs>
 
@@ -129,8 +134,8 @@ export default function Speedometer({
         <path
           d={trackPath}
           fill="none"
-          stroke="rgba(255,255,255,0.08)"
-          strokeWidth={14}
+          stroke="rgba(255,255,255,0.07)"
+          strokeWidth={18}
           strokeLinecap="round"
         />
 
@@ -139,21 +144,21 @@ export default function Speedometer({
           d={trackPath}
           fill="none"
           stroke="url(#arcGradient)"
-          strokeWidth={14}
+          strokeWidth={18}
           strokeLinecap="round"
           strokeDasharray={ARC_LEN}
           style={{
             strokeDashoffset: dashOffset,
-            filter: 'drop-shadow(0 0 5px rgba(34,211,238,0.45))',
+            filter: 'drop-shadow(0 0 6px rgba(56,189,248,0.55))',
           }}
         />
 
         {/* Tick marks + labels */}
         {MARKS.map((mark, i) => {
           const tickAngle = START_ANGLE + (i / (MARKS.length - 1)) * SWEEP;
-          const outer = polar(CX, CY, R - 18, tickAngle);
+          const outer = polar(CX, CY, R - 20, tickAngle);
           const inner = polar(CX, CY, R - 28, tickAngle);
-          const labelPos = polar(CX, CY, R - 38, tickAngle);
+          const labelPos = polar(CX, CY, R - 42, tickAngle);
           return (
             <g key={mark}>
               <line
@@ -161,14 +166,16 @@ export default function Speedometer({
                 y1={inner.y}
                 x2={outer.x}
                 y2={outer.y}
-                stroke="rgba(255,255,255,0.25)"
+                stroke="rgba(255,255,255,0.35)"
                 strokeWidth={2}
+                strokeLinecap="round"
               />
               <text
                 x={labelPos.x}
                 y={labelPos.y}
-                fill="rgba(255,255,255,0.45)"
-                fontSize={8}
+                fill="rgba(255,255,255,0.75)"
+                fontSize={11}
+                fontWeight={600}
                 textAnchor="middle"
                 dominantBaseline="middle"
               >
@@ -178,17 +185,22 @@ export default function Speedometer({
           );
         })}
 
-        {/* Needle — a tapered polygon whose bbox bottom-center sits on the hub.
-            Rotating about originX:0.5/originY:1 (bbox-relative) is robust when the
-            SVG is responsively scaled, unlike a pixel transform-origin. */}
+        {/* Needle — a slim tapered polygon whose bbox bottom-center sits on the
+            hub. Rotating about originX:0.5/originY:1 (bbox-relative) is robust
+            when the SVG is responsively scaled, unlike a pixel transform-origin. */}
         <motion.polygon
-          points={`${CX},${CY - R + 16} ${CX - 5},${CY} ${CX + 5},${CY}`}
-          fill="#e2e8f0"
-          style={{ rotate: angle, originX: 0.5, originY: 1 }}
+          points={`${CX},${CY - R + 24} ${CX - 4},${CY} ${CX + 4},${CY}`}
+          fill="url(#needleGradient)"
+          style={{
+            rotate: angle,
+            originX: 0.5,
+            originY: 1,
+            filter: 'drop-shadow(0 1px 2px rgba(0,0,0,0.4))',
+          }}
         />
         {/* Hub */}
-        <circle cx={CX} cy={CY} r={10} fill="#0f1430" stroke="#22d3ee" strokeWidth={2} />
-        <circle cx={CX} cy={CY} r={4} fill="#22d3ee" />
+        <circle cx={CX} cy={CY} r={12} fill="#0a0e1f" stroke="#22d3ee" strokeWidth={2.5} />
+        <circle cx={CX} cy={CY} r={5} fill="#22d3ee" style={{ filter: 'drop-shadow(0 0 4px rgba(34,211,238,0.8))' }} />
       </svg>
 
       {/* Center readout (HTML overlay for crisp typography). Stacked + sized to
