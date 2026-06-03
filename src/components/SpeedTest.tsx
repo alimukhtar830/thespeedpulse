@@ -1,14 +1,11 @@
 'use client';
 
-import { useCallback, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import Speedometer from './Speedometer';
 import StartButton from './StartButton';
 import ResultCard from './ResultCard';
 import NetworkInfoCard, { type NetworkInfo } from './NetworkInfoCard';
-import { measurePing } from '@/lib/speedtest/ping';
-import { measureDownload } from '@/lib/speedtest/download';
-import { measureUpload } from '@/lib/speedtest/upload';
 import { PHASE_LABELS, type TestPhase } from '@/lib/speedtest/types';
 import { encodeResult } from '@/lib/speedtest/share';
 
@@ -56,7 +53,7 @@ export default function SpeedTest() {
   const [netLoading, setNetLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [shared, setShared] = useState(false);
-  const abortRef = useRef<AbortController | null>(null);
+  const workerRef = useRef<Worker | null>(null);
 
   const running = !['idle', 'done', 'error'].includes(phase);
 
@@ -98,10 +95,10 @@ export default function SpeedTest() {
     }
   }, [results]);
 
-  const fetchNetworkInfo = useCallback(async (signal: AbortSignal) => {
+  const fetchNetworkInfo = useCallback(async () => {
     setNetLoading(true);
     try {
-      const res = await fetch('/api/network-info', { cache: 'no-store', signal });
+      const res = await fetch('/api/network-info', { cache: 'no-store' });
       if (res.ok) setNetInfo((await res.json()) as NetworkInfo);
     } catch {
       // Network info is non-critical; the test still runs without it.
@@ -110,78 +107,83 @@ export default function SpeedTest() {
     }
   }, []);
 
-  const start = useCallback(async () => {
+  const start = useCallback(() => {
     if (running) return;
-    const controller = new AbortController();
-    abortRef.current = controller;
-    const { signal } = controller;
 
     setError(null);
     setResults(EMPTY);
     setGauge(0);
+    setPhase('finding-server');
+    setGaugeUnit('Mbps');
 
-    try {
-      // 1) Finding best server + fetch network info in parallel.
-      setPhase('finding-server');
-      setGaugeUnit('Mbps');
-      const netPromise = fetchNetworkInfo(signal);
-      await new Promise((r) => setTimeout(r, 800)); // brief, intentional UX beat
+    // Network info on the main thread (light); measurement runs in the worker.
+    fetchNetworkInfo();
 
-      // 2) Ping + jitter.
-      setPhase('ping');
-      setGaugeUnit('ms');
-      const ping = await measurePing({
-        signal,
-        onSample: (ms) => setGauge(ms),
-      });
-      setResults((r) => ({ ...r, ping: ping.ping, jitter: ping.jitter }));
-      setGauge(ping.ping);
+    // Run the measurement OFF the main thread so gauge animation/re-renders
+    // can't starve the network read-loops (which would under-measure speed).
+    const worker = new Worker(
+      new URL('../lib/speedtest/worker.ts', import.meta.url),
+    );
+    workerRef.current = worker;
 
-      // Exponential moving average smooths the inherently noisy instantaneous
-      // samples so the gauge glides instead of jumping on every reading.
-      const smoother = () => {
-        let s = 0;
-        return (mbps: number) => {
-          s = s === 0 ? mbps : s + 0.3 * (mbps - s);
-          setGauge(s);
-        };
-      };
+    // EMA to smooth the gauge during throughput phases.
+    let smooth = 0;
 
-      // 3) Download.
-      setPhase('download');
-      setGaugeUnit('Mbps');
-      setGauge(0);
-      const download = await measureDownload({
-        signal,
-        onProgress: smoother(),
-      });
-      setResults((r) => ({ ...r, download }));
-      setGauge(download);
+    worker.onmessage = (e: MessageEvent) => {
+      const m = e.data;
+      switch (m.type) {
+        case 'phase':
+          setPhase(m.phase);
+          if (m.phase === 'ping') {
+            setGaugeUnit('ms');
+            setGauge(0);
+          } else {
+            setGaugeUnit('Mbps');
+            setGauge(0);
+            smooth = 0;
+          }
+          break;
+        case 'progress':
+          if (m.metric === 'ping') {
+            setGauge(m.value);
+          } else {
+            smooth = smooth === 0 ? m.value : smooth + 0.3 * (m.value - smooth);
+            setGauge(smooth);
+          }
+          break;
+        case 'result':
+          setResults((r) => ({ ...r, [m.key]: m.value }));
+          setGauge(m.value);
+          break;
+        case 'done':
+          setPhase('done');
+          worker.terminate();
+          workerRef.current = null;
+          break;
+        case 'error':
+          setError(`${m.message} Please check your connection and try again.`);
+          setPhase('error');
+          worker.terminate();
+          workerRef.current = null;
+          break;
+      }
+    };
 
-      // 4) Upload.
-      setPhase('upload');
-      setGauge(0);
-      const upload = await measureUpload({
-        signal,
-        onProgress: smoother(),
-      });
-      setResults((r) => ({ ...r, upload }));
-      setGauge(upload);
-
-      await netPromise; // ensure network info finished before "done"
-      setPhase('done');
-    } catch (err) {
-      if (signal.aborted) return; // user cancelled — silent
-      setError(
-        err instanceof Error
-          ? `${err.message} Please check your connection and try again.`
-          : 'The test failed. Please try again.',
-      );
+    worker.onerror = () => {
+      setError('The test failed to start. Please try again.');
       setPhase('error');
-    } finally {
-      abortRef.current = null;
-    }
+      worker.terminate();
+      workerRef.current = null;
+    };
+
+    // Brief, intentional UX beat on "Finding best server…" before measuring.
+    setTimeout(() => worker.postMessage({ type: 'start' }), 600);
   }, [running, fetchNetworkInfo]);
+
+  // Clean up the worker if the component unmounts mid-test.
+  useEffect(() => {
+    return () => workerRef.current?.terminate();
+  }, []);
 
   const statusText =
     phase === 'error' ? (error ?? PHASE_LABELS.error) : PHASE_LABELS[phase];
