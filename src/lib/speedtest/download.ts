@@ -46,9 +46,10 @@ export async function measureDownload({
   const warmupEndTime = startTime + warmupMs;
 
   // Adaptive chunk size, shared across streams. Start larger to avoid wasting
-  // the high-latency window on small ramp-up requests.
+  // the high-latency window on small ramp-up requests. Cap matches the server's
+  // 24 MB incompressible pool (one response = at most one pool).
   let chunkBytes = 8 * MB;
-  const maxChunk = 48 * MB;
+  const maxChunk = 24 * MB;
 
   const controller = new AbortController();
   const onAbort = () => controller.abort();

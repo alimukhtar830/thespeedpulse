@@ -5,20 +5,27 @@ export const dynamic = 'force-dynamic';
 export const runtime = 'nodejs';
 
 const MB = 1024 * 1024;
-const MAX_BYTES = 96 * MB; // safety cap per request
+
+// Pre-generated random pool, filled ONCE per instance. 24 MB is larger than
+// Brotli's max compression window (16 MB), so streaming a slice of it stays
+// incompressible — the edge can't shrink it, so the client measures true
+// bytes-on-wire. Generating it once (not per request) means zero per-request
+// CPU, so concurrent streams and cold instances deliver full throughput.
+const POOL = 24 * MB;
+const pool = Buffer.allocUnsafe(POOL);
+randomFillSync(pool);
+
+const MAX_BYTES = POOL; // a single response streams at most one full pool
 const DEFAULT_BYTES = 8 * MB;
-const BLOCK = 1024 * 1024; // 1 MB streaming block (fewer pulls => less overhead)
+const BLOCK = 1024 * 1024; // 1 MB streaming block
 
 /**
- * Streams `bytes` of FRESH random data (a new random block per chunk) with
- * caching disabled. Fresh-per-chunk randomness is critical: the edge (Vercel)
- * applies Brotli compression regardless of `no-transform`, and a *reused* block
- * would compress to almost nothing — making the client over-count throughput by
- * 10×+. Truly random data is incompressible, so bytes-on-wire ≈ bytes-decoded
- * and the measurement is accurate.
+ * Streams up to `bytes` of incompressible random data (a slice of the pre-built
+ * pool) with caching disabled. The client times the transfer to compute
+ * download speed.
  *
  * Query params:
- *   - bytes: number of bytes to send (clamped to MAX_BYTES)
+ *   - bytes: bytes to send (clamped to MAX_BYTES)
  *   - cb:    cache-busting token (defeats any cache)
  */
 export async function GET(req: NextRequest) {
@@ -36,10 +43,8 @@ export async function GET(req: NextRequest) {
         return;
       }
       const size = Math.min(BLOCK, totalBytes - sent);
-      // allocUnsafe is fine — randomFillSync overwrites every byte.
-      const chunk = Buffer.allocUnsafe(size);
-      randomFillSync(chunk);
-      controller.enqueue(chunk);
+      // Zero-copy slice of the pre-generated pool (no per-request CPU).
+      controller.enqueue(pool.subarray(sent, sent + size));
       sent += size;
     },
   });
