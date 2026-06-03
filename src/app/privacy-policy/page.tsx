@@ -16,6 +16,7 @@ export default function PrivacyPolicyPage() {
       intro="Your privacy matters. Here's exactly what we collect, why, and what we never store."
       updated="June 1, 2026"
       withSidebarAd={false}
+      breadcrumbs={[{ name: 'Privacy Policy' }]}
     >
       <h2 className="text-2xl font-bold text-white">Overview</h2>
       <p>

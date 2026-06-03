@@ -10,6 +10,7 @@ import { measurePing } from '@/lib/speedtest/ping';
 import { measureDownload } from '@/lib/speedtest/download';
 import { measureUpload } from '@/lib/speedtest/upload';
 import { PHASE_LABELS, type TestPhase } from '@/lib/speedtest/types';
+import { encodeResult } from '@/lib/speedtest/share';
 
 const DownloadIcon = (
   <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
@@ -54,9 +55,48 @@ export default function SpeedTest() {
   const [netInfo, setNetInfo] = useState<NetworkInfo | null>(null);
   const [netLoading, setNetLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [shared, setShared] = useState(false);
   const abortRef = useRef<AbortController | null>(null);
 
   const running = !['idle', 'done', 'error'].includes(phase);
+
+  const complete =
+    results.download != null &&
+    results.upload != null &&
+    results.ping != null &&
+    results.jitter != null;
+
+  const shareResult = useCallback(async () => {
+    if (
+      results.download == null ||
+      results.upload == null ||
+      results.ping == null ||
+      results.jitter == null
+    )
+      return;
+    const token = encodeResult({
+      d: results.download,
+      u: results.upload,
+      p: results.ping,
+      j: results.jitter,
+    });
+    const url = `${window.location.origin}/result/${token}`;
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: 'My internet speed',
+          text: `Download ${results.download} Mbps · Upload ${results.upload} Mbps`,
+          url,
+        });
+      } else {
+        await navigator.clipboard.writeText(url);
+        setShared(true);
+        setTimeout(() => setShared(false), 2000);
+      }
+    } catch {
+      /* user cancelled share or clipboard blocked — ignore */
+    }
+  }, [results]);
 
   const fetchNetworkInfo = useCallback(async (signal: AbortSignal) => {
     setNetLoading(true);
@@ -191,11 +231,31 @@ export default function SpeedTest() {
         </AnimatePresence>
       </div>
 
-      <StartButton
-        onClick={start}
-        running={running}
-        label={phase === 'done' || phase === 'error' ? 'Test Again' : 'Start Test'}
-      />
+      <div className="flex flex-wrap items-center justify-center gap-3">
+        <StartButton
+          onClick={start}
+          running={running}
+          label={phase === 'done' || phase === 'error' ? 'Test Again' : 'Start Test'}
+        />
+        {phase === 'done' && complete && (
+          <button
+            type="button"
+            onClick={shareResult}
+            className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-6 py-3 font-semibold text-white transition-colors hover:border-cyan-400/40 hover:bg-white/10"
+          >
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
+              <path
+                d="M4 12v8h16v-8M12 3v13m0-13l-4 4m4-4l4 4"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              />
+            </svg>
+            {shared ? 'Link copied!' : 'Share result'}
+          </button>
+        )}
+      </div>
 
       {/* Result cards */}
       <div className="grid w-full grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">

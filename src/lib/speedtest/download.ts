@@ -31,7 +31,7 @@ interface DownloadOptions {
 export async function measureDownload({
   durationMs = 8000,
   warmupMs = 1500,
-  streams = 4,
+  streams = 6,
   onProgress,
   signal,
 }: DownloadOptions = {}): Promise<number> {

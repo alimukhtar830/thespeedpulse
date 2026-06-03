@@ -56,6 +56,42 @@ export const pingFaqs: FaqItem[] = [
   },
 ];
 
+export const needSpeedFaqs: FaqItem[] = [
+  {
+    question: 'How many Mbps do I really need?',
+    answer:
+      'For one or two people browsing and streaming HD, 25–50 Mbps is plenty. For a family with 4K streaming, gaming, and several devices, 100–300 Mbps is comfortable. Most households rarely need more than 500 Mbps.',
+  },
+  {
+    question: 'How much speed do I need to work from home?',
+    answer:
+      'For video calls and cloud apps, aim for at least 25 Mbps download and 5–10 Mbps upload per person. If others stream or game at the same time, add headroom — 100 Mbps+ keeps everything smooth.',
+  },
+  {
+    question: 'Does more speed always mean better?',
+    answer:
+      'Not necessarily. Beyond what your devices and usage need, extra speed has little effect. Low ping and stable jitter often matter more for gaming and calls than raw download numbers.',
+  },
+];
+
+export const improveFaqs: FaqItem[] = [
+  {
+    question: 'Why is my internet so slow?',
+    answer:
+      'Common causes are Wi-Fi distance and interference, an old router, too many devices, background downloads, peak-time congestion, or an underlying plan/line issue. Testing wired vs Wi-Fi quickly isolates whether it is your network or your connection.',
+  },
+  {
+    question: 'How can I make my Wi-Fi faster?',
+    answer:
+      'Move closer to the router or relocate the router centrally and high up, switch to the 5 GHz band, reduce interference, update firmware, and consider a mesh system for larger homes. A wired Ethernet connection is always fastest.',
+  },
+  {
+    question: 'Does restarting my router help?',
+    answer:
+      'Often yes. Restarting clears memory, re-establishes the connection, and can resolve temporary slowdowns. If problems persist after a restart and a wired test, contact your provider.',
+  },
+];
+
 export const guideFaqs: FaqItem[] = [
   {
     question: 'How accurate is a browser-based speed test?',

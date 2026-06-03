@@ -38,7 +38,7 @@ interface UploadOptions {
 export async function measureUpload({
   durationMs = 8000,
   warmupMs = 1500,
-  streams = 3,
+  streams = 4,
   onProgress,
   signal,
 }: UploadOptions = {}): Promise<number> {

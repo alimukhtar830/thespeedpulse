@@ -23,6 +23,7 @@ export default function GuidePage() {
       eyebrow="Guide"
       title="The Internet Speed Guide"
       intro="Everything you need to understand your connection — and how much speed you actually need."
+      breadcrumbs={[{ name: 'Internet Speed Guide' }]}
     >
       <h2 className="text-2xl font-bold text-white">
         The four key measurements

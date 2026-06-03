@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react';
 import Link from 'next/link';
 import AdSlot from './AdSlot';
+import Breadcrumbs, { type Crumb } from './Breadcrumbs';
 
 interface PageShellProps {
   title: string;
@@ -13,6 +14,8 @@ interface PageShellProps {
   withSidebarAd?: boolean;
   /** Last-updated date string for content/legal pages. */
   updated?: string;
+  /** Breadcrumb trail (Home is prepended automatically). */
+  breadcrumbs?: Crumb[];
 }
 
 /**
@@ -27,9 +30,15 @@ export default function PageShell({
   children,
   withSidebarAd = true,
   updated,
+  breadcrumbs,
 }: PageShellProps) {
   return (
     <main className="container-page py-12 sm:py-16">
+      {breadcrumbs && (
+        <div className="mx-auto max-w-3xl">
+          <Breadcrumbs items={breadcrumbs} />
+        </div>
+      )}
       <div className="mx-auto max-w-3xl text-center">
         {eyebrow && (
           <p className="mb-3 text-sm font-semibold uppercase tracking-[0.2em] text-cyan-400">

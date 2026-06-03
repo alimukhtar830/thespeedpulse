@@ -16,6 +16,7 @@ export default function UploadSpeedPage() {
       eyebrow="Learn"
       title="What is Upload Speed?"
       intro="Upload speed is how fast your connection sends data from your device out to the internet."
+      breadcrumbs={[{ name: 'What is Upload Speed?' }]}
     >
       <p>
         <strong>Upload speed</strong> measures how quickly data travels from

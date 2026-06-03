@@ -17,9 +17,9 @@ export const siteConfig = {
 /** Primary navigation links (also used to build the sitemap). */
 export const navLinks = [
   { href: '/', label: 'Speed Test' },
+  { href: '/performance', label: 'By Country' },
   { href: '/internet-speed-guide', label: 'Speed Guide' },
-  { href: '/what-is-download-speed', label: 'Download' },
-  { href: '/what-is-upload-speed', label: 'Upload' },
+  { href: '/how-much-speed-do-i-need', label: 'How Much?' },
   { href: '/what-is-ping', label: 'Ping' },
   { href: '/about', label: 'About' },
   { href: '/contact', label: 'Contact' },
@@ -29,9 +29,12 @@ export const navLinks = [
 export const footerLinks = {
   learn: [
     { href: '/internet-speed-guide', label: 'Internet Speed Guide' },
+    { href: '/how-much-speed-do-i-need', label: 'How Much Speed Do I Need?' },
+    { href: '/how-to-improve-internet-speed', label: 'How to Improve Speed' },
     { href: '/what-is-download-speed', label: 'What is Download Speed?' },
     { href: '/what-is-upload-speed', label: 'What is Upload Speed?' },
     { href: '/what-is-ping', label: 'What is Ping?' },
+    { href: '/performance', label: 'Speed by Country' },
   ],
   company: [
     { href: '/about', label: 'About' },
@@ -46,9 +49,12 @@ export const allRoutes = [
   '/about',
   '/privacy-policy',
   '/internet-speed-guide',
+  '/how-much-speed-do-i-need',
+  '/how-to-improve-internet-speed',
   '/what-is-download-speed',
   '/what-is-upload-speed',
   '/what-is-ping',
+  '/performance',
   '/contact',
 ] as const;
 

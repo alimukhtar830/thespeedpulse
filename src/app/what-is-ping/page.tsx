@@ -16,6 +16,7 @@ export default function PingPage() {
       eyebrow="Learn"
       title="What is Ping?"
       intro="Ping is how long it takes a small request to travel to a server and back — your connection's responsiveness."
+      breadcrumbs={[{ name: 'What is Ping?' }]}
     >
       <p>
         <strong>Ping</strong>, also called latency, is the round-trip time for a

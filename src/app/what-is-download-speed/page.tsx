@@ -16,6 +16,7 @@ export default function DownloadSpeedPage() {
       eyebrow="Learn"
       title="What is Download Speed?"
       intro="Download speed is how fast your connection pulls data from the internet to your device."
+      breadcrumbs={[{ name: 'What is Download Speed?' }]}
     >
       <p>
         <strong>Download speed</strong> measures how quickly data travels from

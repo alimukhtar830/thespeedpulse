@@ -38,3 +38,6 @@ next-env.d.ts
 /.claude/
 
 .vercel
+
+# internal docs (e.g. competitor analysis) — not for the public repo
+*.pdf

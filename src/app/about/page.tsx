@@ -14,6 +14,7 @@ export default function AboutPage() {
       eyebrow="About"
       title={`About ${siteConfig.name}`}
       intro="A fast, modern and privacy-friendly way to understand your internet connection."
+      breadcrumbs={[{ name: 'About' }]}
     >
       <p>
         {siteConfig.name} is a free internet speed test built to give you a
