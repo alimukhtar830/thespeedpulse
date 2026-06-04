@@ -44,8 +44,9 @@ export default function AboutPage() {
 
       <h2 className="text-2xl font-bold text-white">Who built SpeedPulse</h2>
       <p>
-        {siteConfig.name} was founded by <strong>{siteConfig.founder}</strong>{' '}
-        and is maintained by the {siteConfig.author}. We&apos;re a small,
+        {siteConfig.name} was founded by{' '}
+        <strong>{siteConfig.founders.join(' and ')}</strong> and is maintained by
+        the {siteConfig.author}. We&apos;re a small,
         independent team of engineers who care about measurement accuracy and a
         clean, honest user experience. Our guides are written and reviewed by the
         team based on hands-on testing and established networking fundamentals.

@@ -13,9 +13,8 @@ export const siteConfig = {
   locale: 'en_US',
   twitter: '@speedpulse',
   // E-E-A-T: a named editorial entity for bylines + Article/author schema.
-  // Replace `founder` with your real name to strengthen authorship signals.
   author: 'SpeedPulse Editorial Team',
-  founder: 'Ali Mukhtar',
+  founders: ['Ali Mukhtar', 'Mansoor Ahmad Samar'],
   // Visible freshness signal — bump when content is reviewed/updated.
   updated: 'June 4, 2026',
   publishedISO: '2026-06-01',
