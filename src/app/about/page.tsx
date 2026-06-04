@@ -3,8 +3,8 @@ import { siteConfig } from '@/lib/site';
 import { pageMeta } from '@/lib/seo';
 
 export const metadata = pageMeta({
-  title: 'About',
-  description: `Learn about ${siteConfig.name} — a fast, modern, privacy-friendly internet speed test for measuring download, upload, ping and jitter.`,
+  title: `About ${siteConfig.name} — Free Internet Speed Test Tool`,
+  description: `Learn about ${siteConfig.name} — a fast, modern, privacy-friendly internet speed test for measuring download, upload, ping and jitter. Who built it and how it works.`,
   path: '/about',
 });
 
@@ -15,6 +15,7 @@ export default function AboutPage() {
       title={`About ${siteConfig.name}`}
       intro="A fast, modern and privacy-friendly way to understand your internet connection."
       breadcrumbs={[{ name: 'About' }]}
+      article={false}
     >
       <p>
         {siteConfig.name} is a free internet speed test built to give you a
@@ -39,6 +40,24 @@ export default function AboutPage() {
         in both directions to measure your download and upload throughput. The
         speedometer animates in real time so you can watch your connection
         perform.
+      </p>
+
+      <h2 className="text-2xl font-bold text-white">Who built SpeedPulse</h2>
+      <p>
+        {siteConfig.name} was founded by <strong>{siteConfig.founder}</strong>{' '}
+        and is maintained by the {siteConfig.author}. We&apos;re a small,
+        independent team of engineers who care about measurement accuracy and a
+        clean, honest user experience. Our guides are written and reviewed by the
+        team based on hands-on testing and established networking fundamentals.
+        Have feedback or a correction?{' '}
+        <a href="/contact" className="text-cyan-400 hover:underline">
+          Get in touch
+        </a>
+        , and read{' '}
+        <a href="/how-speedpulse-works" className="text-cyan-400 hover:underline">
+          how SpeedPulse works
+        </a>{' '}
+        for our methodology.
       </p>
 
       <h2 className="text-2xl font-bold text-white">Privacy first</h2>

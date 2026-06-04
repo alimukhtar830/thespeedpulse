@@ -4,21 +4,47 @@ import SpeedTestSection from '@/components/SpeedTestSection';
 import GlassCard from '@/components/GlassCard';
 import AdSlot from '@/components/AdSlot';
 import JsonLd from '@/components/JsonLd';
+import FaqSection from '@/components/FaqSection';
 import { siteConfig } from '@/lib/site';
 import { pageMeta } from '@/lib/seo';
+
+const homeFaqs = [
+  {
+    question: 'What is a good internet speed?',
+    answer:
+      'For most households, 50–100 Mbps comfortably handles HD/4K streaming, video calls and several devices. Heavy 4K, large downloads or many users benefit from 200 Mbps or more.',
+  },
+  {
+    question: 'How accurate is the SpeedPulse speed test?',
+    answer:
+      'SpeedPulse measures your real connection at test time using multiple parallel data transfers, with a warm-up period excluded for accuracy. Results vary with Wi-Fi, device and congestion, so run a few tests and average them.',
+  },
+  {
+    question: 'Does the speed test use my data?',
+    answer:
+      'Yes — it transfers real data to measure speed, typically a few dozen to a few hundred MB depending on your connection. The exact amount is shown after each test, and uploaded data is never stored.',
+  },
+  {
+    question: 'Why is my speed lower than my plan?',
+    answer:
+      'Wi-Fi distance and interference, older routers, background downloads, peak-time congestion and the distance to the test server all reduce measured speed. Testing over Ethernet usually gives a higher, more stable result.',
+  },
+  {
+    question: 'What do download, upload, ping and jitter mean?',
+    answer:
+      'Download is how fast data reaches you; upload is how fast you send data out; ping is latency (responsiveness); and jitter is how stable that latency is. All four together describe your connection quality.',
+  },
+  {
+    question: 'Is SpeedPulse free?',
+    answer:
+      'Yes, SpeedPulse is completely free, requires no signup, and runs right in your browser on any device.',
+  },
+];
 
 export const metadata = pageMeta({
   title: 'Test Your Internet Speed Instantly — Free Speed Test',
   description: siteConfig.description,
   path: '/',
-  keywords: [
-    'internet speed test',
-    'speed test',
-    'internet speed check',
-    'wifi speed test',
-    'broadband speed test',
-    'download upload ping test',
-  ],
 });
 
 // SoftwareApplication structured data for the speed-test tool (rich results).
@@ -144,6 +170,13 @@ export default function HomePage() {
             </GlassCard>
           ))}
         </ol>
+      </section>
+
+      {/* Homepage FAQ — depth + FAQPage rich-result eligibility */}
+      <section className="container-page mt-16">
+        <div className="mx-auto max-w-3xl">
+          <FaqSection items={homeFaqs} />
+        </div>
       </section>
     </>
   );

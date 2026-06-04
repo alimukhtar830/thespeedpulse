@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import PageShell from '@/components/PageShell';
 import FaqSection from '@/components/FaqSection';
 import { guideFaqs } from '@/content/faqs';
@@ -60,6 +61,97 @@ export default function GuidePage() {
         </table>
       </div>
 
+      <h2 className="text-2xl font-bold text-white">Speed you need by activity</h2>
+      <p>
+        Bandwidth requirements add up when activities happen at the same time.
+        Here&apos;s what common tasks need — see the dedicated guides for detail:
+      </p>
+      <ul className="list-disc space-y-2 pl-6">
+        <li>
+          <Link href="/speed-for-streaming" className="text-cyan-400 hover:underline">
+            Streaming
+          </Link>{' '}
+          — 5–8 Mbps for HD, ~25 Mbps per 4K stream.
+        </li>
+        <li>
+          <Link href="/speed-for-gaming" className="text-cyan-400 hover:underline">
+            Gaming
+          </Link>{' '}
+          — only 10–25 Mbps, but low{' '}
+          <Link href="/what-is-ping" className="text-cyan-400 hover:underline">
+            ping
+          </Link>{' '}
+          matters most.
+        </li>
+        <li>
+          <Link href="/speed-for-video-calls" className="text-cyan-400 hover:underline">
+            Video calls
+          </Link>{' '}
+          — 3–5 Mbps upload per HD call; stable{' '}
+          <Link href="/what-is-jitter" className="text-cyan-400 hover:underline">
+            jitter
+          </Link>{' '}
+          is key.
+        </li>
+        <li>
+          <Link href="/speed-for-working-from-home" className="text-cyan-400 hover:underline">
+            Working from home
+          </Link>{' '}
+          — ~25 Mbps down / 5–10 Mbps up per person.
+        </li>
+      </ul>
+
+      <h2 className="text-2xl font-bold text-white">
+        What affects your real-world speed
+      </h2>
+      <p>
+        Your measured speed is often lower than your plan — that&apos;s normal.
+        The biggest factors are{' '}
+        <Link href="/wifi-vs-ethernet" className="text-cyan-400 hover:underline">
+          Wi-Fi vs wired
+        </Link>{' '}
+        (distance and interference), the age of your router, the number of
+        devices sharing the line, peak-time congestion, and how far you are from
+        the test server. If your speed is well below your plan, work through{' '}
+        <Link href="/why-is-my-internet-slow" className="text-cyan-400 hover:underline">
+          why your internet is slow
+        </Link>{' '}
+        and{' '}
+        <Link href="/how-to-improve-internet-speed" className="text-cyan-400 hover:underline">
+          how to improve it
+        </Link>
+        .
+      </p>
+
+      <h2 className="text-2xl font-bold text-white">Download vs upload vs latency</h2>
+      <p>
+        <Link href="/what-is-download-speed" className="text-cyan-400 hover:underline">
+          Download
+        </Link>{' '}
+        affects how fast things load and stream;{' '}
+        <Link href="/what-is-upload-speed" className="text-cyan-400 hover:underline">
+          upload
+        </Link>{' '}
+        affects calls, backups and posting; and{' '}
+        <Link href="/what-is-ping" className="text-cyan-400 hover:underline">
+          ping
+        </Link>{' '}
+        /{' '}
+        <Link href="/what-is-jitter" className="text-cyan-400 hover:underline">
+          jitter
+        </Link>{' '}
+        determine responsiveness. A great connection is balanced across all four,
+        not just high on download. Curious how yours compares to others? See{' '}
+        <Link href="/performance" className="text-cyan-400 hover:underline">
+          average speeds by country
+        </Link>{' '}
+        and{' '}
+        <Link href="/isp" className="text-cyan-400 hover:underline">
+          by ISP
+        </Link>
+        .
+      </p>
+
       <h2 className="text-2xl font-bold text-white">
         Tips for accurate results
       </h2>
@@ -73,6 +165,13 @@ export default function GuidePage() {
         <li>
           Test at different times of day — networks are often slower at peak
           evening hours.
+        </li>
+        <li>
+          Learn more about{' '}
+          <Link href="/how-accurate-are-speed-tests" className="text-cyan-400 hover:underline">
+            how accurate speed tests are
+          </Link>
+          .
         </li>
       </ul>
 

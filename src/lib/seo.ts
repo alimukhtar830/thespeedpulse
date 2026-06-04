@@ -6,8 +6,6 @@ interface PageMetaInput {
   description: string;
   /** Absolute path beginning with "/" (e.g. "/what-is-ping"). */
   path: string;
-  /** Optional comma/array keywords specific to the page. */
-  keywords?: string[];
   /** OpenGraph type — "website" (default) or "article". */
   type?: 'website' | 'article';
 }
@@ -23,14 +21,12 @@ export function pageMeta({
   title,
   description,
   path,
-  keywords,
   type = 'website',
 }: PageMetaInput): Metadata {
   const url = `${siteConfig.url}${path === '/' ? '' : path}`;
   return {
     title,
     description,
-    keywords,
     alternates: { canonical: path },
     openGraph: {
       title,

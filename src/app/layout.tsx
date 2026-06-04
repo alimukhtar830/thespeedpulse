@@ -19,16 +19,6 @@ export const metadata: Metadata = {
   },
   description: siteConfig.description,
   applicationName: siteConfig.name,
-  keywords: [
-    'internet speed test',
-    'speed test',
-    'download speed',
-    'upload speed',
-    'ping test',
-    'jitter',
-    'bandwidth test',
-    'broadband test',
-  ],
   authors: [{ name: siteConfig.name }],
   alternates: { canonical: '/' },
   openGraph: {

@@ -16,6 +16,7 @@ export default function ContactPage() {
       title="Get in touch"
       intro="Questions, feedback, or partnership enquiries? Send us a message and we'll get back to you."
       withSidebarAd={false}
+      article={false}
       breadcrumbs={[{ name: 'Contact' }]}
     >
       <ContactForm />

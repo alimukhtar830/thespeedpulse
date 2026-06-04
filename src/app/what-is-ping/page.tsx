@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import PageShell from '@/components/PageShell';
 import FaqSection from '@/components/FaqSection';
 import { pingFaqs } from '@/content/faqs';
@@ -63,6 +64,32 @@ export default function PingPage() {
         </li>
       </ul>
 
+      <h2 className="text-2xl font-bold text-white">Good ping by use case</h2>
+      <div className="not-prose overflow-hidden rounded-2xl border border-white/10">
+        <table className="w-full text-left text-sm">
+          <thead className="bg-white/5 text-slate-300">
+            <tr>
+              <th className="px-4 py-3 font-semibold">Use case</th>
+              <th className="px-4 py-3 font-semibold">Target ping</th>
+            </tr>
+          </thead>
+          <tbody>
+            {[
+              ['Competitive gaming', 'Under 20 ms'],
+              ['Casual online gaming', '20–50 ms'],
+              ['Video calls (Zoom/Teams)', 'Under 50 ms'],
+              ['Browsing & streaming', 'Under 100 ms'],
+              ['Noticeable lag begins', 'Over 150 ms'],
+            ].map(([u, p], i) => (
+              <tr key={u} className={i % 2 ? 'bg-white/[0.02]' : ''}>
+                <td className="px-4 py-3 text-slate-300">{u}</td>
+                <td className="px-4 py-3 font-medium text-cyan-400">{p}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
       <h2 className="text-2xl font-bold text-white">How to lower your ping</h2>
       <ul className="list-disc space-y-2 pl-6">
         <li>Use a wired Ethernet connection instead of Wi-Fi.</li>
@@ -70,6 +97,25 @@ export default function PingPage() {
         <li>Close background apps using bandwidth.</li>
         <li>Restart your router and keep its firmware updated.</li>
       </ul>
+      <p>
+        For a complete walkthrough, see our dedicated guide on{' '}
+        <Link href="/how-to-fix-high-ping" className="text-cyan-400 hover:underline">
+          how to fix high ping
+        </Link>
+        . High ping often comes with high{' '}
+        <Link href="/what-is-jitter" className="text-cyan-400 hover:underline">
+          jitter
+        </Link>{' '}
+        — and it matters most for{' '}
+        <Link href="/speed-for-gaming" className="text-cyan-400 hover:underline">
+          gaming
+        </Link>
+        . Check yours now with a{' '}
+        <Link href="/" className="text-cyan-400 hover:underline">
+          free speed test
+        </Link>
+        .
+      </p>
 
       <FaqSection items={pingFaqs} />
     </PageShell>

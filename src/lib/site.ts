@@ -12,6 +12,14 @@ export const siteConfig = {
   url: process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
   locale: 'en_US',
   twitter: '@speedpulse',
+  // E-E-A-T: a named editorial entity for bylines + Article/author schema.
+  // Replace `founder` with your real name to strengthen authorship signals.
+  author: 'SpeedPulse Editorial Team',
+  founder: 'Ali Mukhtar',
+  // Visible freshness signal — bump when content is reviewed/updated.
+  updated: 'June 4, 2026',
+  publishedISO: '2026-06-01',
+  updatedISO: '2026-06-04',
 } as const;
 
 /** Primary navigation links (also used to build the sitemap). */
