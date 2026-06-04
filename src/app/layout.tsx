@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import { Inter } from 'next/font/google';
+import { GoogleTagManager } from '@next/third-parties/google';
 import './globals.css';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
@@ -69,7 +70,20 @@ export default function RootLayout({
 
   return (
     <html lang="en" className={inter.variable}>
+      {siteConfig.gtmId && <GoogleTagManager gtmId={siteConfig.gtmId} />}
       <body className="flex min-h-screen flex-col">
+        {/* GTM noscript fallback (per Google's install guide) */}
+        {siteConfig.gtmId && (
+          <noscript>
+            <iframe
+              src={`https://www.googletagmanager.com/ns.html?id=${siteConfig.gtmId}`}
+              height="0"
+              width="0"
+              style={{ display: 'none', visibility: 'hidden' }}
+              title="gtm"
+            />
+          </noscript>
+        )}
         <Navbar />
         <div className="flex-1">{children}</div>
         <Footer />
