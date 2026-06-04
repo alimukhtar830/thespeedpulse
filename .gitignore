@@ -39,5 +39,7 @@ next-env.d.ts
 
 .vercel
 
-# internal docs (e.g. competitor analysis) — not for the public repo
+# internal docs (e.g. competitor analysis, audits) — not for the public repo
 *.pdf
+*_audit*.md
+*_seo_audit*.md
