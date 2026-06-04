@@ -1,12 +1,12 @@
-import type { Metadata } from 'next';
 import PageShell from '@/components/PageShell';
 import { siteConfig } from '@/lib/site';
+import { pageMeta } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: 'Privacy Policy',
   description: `How ${siteConfig.name} handles your data: what we use your IP and approximate location for, and what we never store.`,
-  alternates: { canonical: '/privacy-policy' },
-};
+  path: '/privacy-policy',
+});
 
 export default function PrivacyPolicyPage() {
   return (

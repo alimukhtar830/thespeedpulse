@@ -1,13 +1,13 @@
-import type { Metadata } from 'next';
 import PageShell from '@/components/PageShell';
 import ContactForm from '@/components/ContactForm';
 import { siteConfig } from '@/lib/site';
+import { pageMeta } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: 'Contact',
   description: `Get in touch with the ${siteConfig.name} team. Questions, feedback, or partnership enquiries welcome.`,
-  alternates: { canonical: '/contact' },
-};
+  path: '/contact',
+});
 
 export default function ContactPage() {
   return (

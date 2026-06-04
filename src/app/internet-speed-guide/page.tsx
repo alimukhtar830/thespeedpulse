@@ -1,14 +1,15 @@
-import type { Metadata } from 'next';
 import PageShell from '@/components/PageShell';
 import FaqSection from '@/components/FaqSection';
 import { guideFaqs } from '@/content/faqs';
+import { pageMeta } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: 'Internet Speed Guide — How Much Speed Do You Need?',
   description:
     'Understand internet speeds: what download, upload, ping and jitter mean, how many Mbps you need for streaming, gaming and work, and how to get accurate results.',
-  alternates: { canonical: '/internet-speed-guide' },
-};
+  path: '/internet-speed-guide',
+  type: 'article',
+});
 
 const tiers = [
   ['1–10 Mbps', 'Basic browsing, email, SD video on one device.'],

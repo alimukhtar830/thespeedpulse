@@ -1,14 +1,15 @@
-import type { Metadata } from 'next';
 import PageShell from '@/components/PageShell';
 import FaqSection from '@/components/FaqSection';
 import { downloadFaqs } from '@/content/faqs';
+import { pageMeta } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: 'What is Download Speed?',
   description:
     'Download speed explained: what it means, how it is measured in Mbps, what counts as a good download speed, and why yours might be slower than expected.',
-  alternates: { canonical: '/what-is-download-speed' },
-};
+  path: '/what-is-download-speed',
+  type: 'article',
+});
 
 export default function DownloadSpeedPage() {
   return (

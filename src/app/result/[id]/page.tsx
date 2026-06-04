@@ -4,6 +4,7 @@ import GlassCard from '@/components/GlassCard';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import { decodeResult } from '@/lib/speedtest/share';
 import { siteConfig } from '@/lib/site';
+import { pageMeta } from '@/lib/seo';
 
 interface Props {
   params: { id: string };
@@ -14,15 +15,11 @@ export function generateMetadata({ params }: Props): Metadata {
   if (!r) {
     return { title: 'Speed Test Result', robots: { index: false } };
   }
-  const title = `${r.d} Mbps download · ${r.u} Mbps upload — Speed Test Result`;
-  const description = `Download ${r.d} Mbps, upload ${r.u} Mbps, ping ${r.p} ms, jitter ${r.j} ms. Test your own internet speed free on ${siteConfig.name}.`;
-  return {
-    title,
-    description,
-    alternates: { canonical: `/result/${params.id}` },
-    openGraph: { title, description, type: 'website' },
-    twitter: { card: 'summary_large_image', title, description },
-  };
+  return pageMeta({
+    title: `${r.d} Mbps download · ${r.u} Mbps upload — Speed Test Result`,
+    description: `Download ${r.d} Mbps, upload ${r.u} Mbps, ping ${r.p} ms, jitter ${r.j} ms. Test your own internet speed free on ${siteConfig.name}.`,
+    path: `/result/${params.id}`,
+  });
 }
 
 const Stat = ({

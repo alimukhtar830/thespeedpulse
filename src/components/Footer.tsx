@@ -7,8 +7,8 @@ export default function Footer() {
 
   return (
     <footer className="mt-24 border-t border-white/10 bg-navy-950/60">
-      <div className="container-page grid gap-10 py-12 md:grid-cols-4">
-        <div className="md:col-span-1">
+      <div className="container-page grid gap-8 py-12 sm:grid-cols-2 lg:grid-cols-5">
+        <div className="sm:col-span-2 lg:col-span-1">
           <div className="flex items-center gap-2 text-lg font-bold">
             <span
               className="grid h-8 w-8 place-items-center rounded-xl bg-hero-gradient"
@@ -31,51 +31,32 @@ export default function Footer() {
           </p>
         </div>
 
-        <nav aria-label="Learn">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-300">
-            Learn
-          </h3>
-          <ul className="mt-4 space-y-2">
-            {footerLinks.learn.map((l) => (
-              <li key={l.href}>
-                <Link
-                  href={l.href}
-                  className="text-sm text-slate-400 transition-colors hover:text-cyan-400"
-                >
-                  {l.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <nav aria-label="Company">
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-300">
-            Company
-          </h3>
-          <ul className="mt-4 space-y-2">
-            {footerLinks.company.map((l) => (
-              <li key={l.href}>
-                <Link
-                  href={l.href}
-                  className="text-sm text-slate-400 transition-colors hover:text-cyan-400"
-                >
-                  {l.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
-
-        <div>
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-300">
-            Note
-          </h3>
-          <p className="mt-4 text-sm text-slate-400">
-            Results are an estimate of your connection at test time and can vary
-            with network conditions, device and Wi-Fi signal.
-          </p>
-        </div>
+        {(
+          [
+            ['Measure', footerLinks.measure],
+            ['Learn', footerLinks.learn],
+            ['Guides', footerLinks.guides],
+            ['Company', footerLinks.company],
+          ] as const
+        ).map(([heading, links]) => (
+          <nav key={heading} aria-label={heading}>
+            <h3 className="text-sm font-semibold uppercase tracking-wider text-slate-300">
+              {heading}
+            </h3>
+            <ul className="mt-4 space-y-2">
+              {links.map((l) => (
+                <li key={l.href}>
+                  <Link
+                    href={l.href}
+                    className="text-sm text-slate-400 transition-colors hover:text-cyan-400"
+                  >
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        ))}
       </div>
 
       <div className="border-t border-white/10">

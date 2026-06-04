@@ -18,44 +18,76 @@ export const siteConfig = {
 export const navLinks = [
   { href: '/', label: 'Speed Test' },
   { href: '/performance', label: 'By Country' },
-  { href: '/internet-speed-guide', label: 'Speed Guide' },
-  { href: '/how-much-speed-do-i-need', label: 'How Much?' },
-  { href: '/what-is-ping', label: 'Ping' },
+  { href: '/speed', label: 'By City' },
+  { href: '/isp', label: 'ISPs' },
+  { href: '/internet-speed-guide', label: 'Guide' },
   { href: '/about', label: 'About' },
-  { href: '/contact', label: 'Contact' },
 ] as const;
 
-/** Footer link groups. */
+/** Footer link groups (also a key internal-linking surface for SEO). */
 export const footerLinks = {
+  measure: [
+    { href: '/', label: 'Speed Test' },
+    { href: '/performance', label: 'Speed by Country' },
+    { href: '/speed', label: 'Speed by City' },
+    { href: '/isp', label: 'ISP Speed Test' },
+  ],
   learn: [
     { href: '/internet-speed-guide', label: 'Internet Speed Guide' },
     { href: '/how-much-speed-do-i-need', label: 'How Much Speed Do I Need?' },
-    { href: '/how-to-improve-internet-speed', label: 'How to Improve Speed' },
     { href: '/what-is-download-speed', label: 'What is Download Speed?' },
     { href: '/what-is-upload-speed', label: 'What is Upload Speed?' },
     { href: '/what-is-ping', label: 'What is Ping?' },
-    { href: '/performance', label: 'Speed by Country' },
+    { href: '/what-is-jitter', label: 'What is Jitter?' },
+    { href: '/what-is-bandwidth', label: 'What is Bandwidth?' },
+    { href: '/how-accurate-are-speed-tests', label: 'How Accurate Are Speed Tests?' },
+  ],
+  guides: [
+    { href: '/how-to-improve-internet-speed', label: 'Improve Internet Speed' },
+    { href: '/why-is-my-internet-slow', label: 'Why Is My Internet Slow?' },
+    { href: '/how-to-fix-high-ping', label: 'Fix High Ping' },
+    { href: '/wifi-vs-ethernet', label: 'Wi-Fi vs Ethernet' },
+    { href: '/best-dns-servers', label: 'Best DNS Servers' },
+    { href: '/speed-for-streaming', label: 'Speed for Streaming' },
+    { href: '/speed-for-gaming', label: 'Speed for Gaming' },
+    { href: '/speed-for-video-calls', label: 'Speed for Video Calls' },
+    { href: '/speed-for-working-from-home', label: 'Speed for Working From Home' },
   ],
   company: [
     { href: '/about', label: 'About' },
+    { href: '/how-speedpulse-works', label: 'How SpeedPulse Works' },
     { href: '/contact', label: 'Contact' },
     { href: '/privacy-policy', label: 'Privacy Policy' },
   ],
 } as const;
 
-/** All indexable routes — consumed by app/sitemap.ts. */
+/** All static indexable routes — consumed by app/sitemap.ts (dynamic ISP/city/country pages are added there). */
 export const allRoutes = [
   '/',
   '/about',
+  '/how-speedpulse-works',
   '/privacy-policy',
+  '/contact',
   '/internet-speed-guide',
   '/how-much-speed-do-i-need',
   '/how-to-improve-internet-speed',
+  '/why-is-my-internet-slow',
+  '/how-to-fix-high-ping',
+  '/wifi-vs-ethernet',
+  '/best-dns-servers',
   '/what-is-download-speed',
   '/what-is-upload-speed',
   '/what-is-ping',
+  '/what-is-jitter',
+  '/what-is-bandwidth',
+  '/how-accurate-are-speed-tests',
+  '/speed-for-streaming',
+  '/speed-for-gaming',
+  '/speed-for-video-calls',
+  '/speed-for-working-from-home',
   '/performance',
-  '/contact',
+  '/speed',
+  '/isp',
 ] as const;
 
 /**

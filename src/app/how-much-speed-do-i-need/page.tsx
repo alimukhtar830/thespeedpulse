@@ -1,15 +1,16 @@
-import type { Metadata } from 'next';
 import Link from 'next/link';
 import PageShell from '@/components/PageShell';
 import FaqSection from '@/components/FaqSection';
 import { needSpeedFaqs } from '@/content/faqs';
+import { pageMeta } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: 'How Much Internet Speed Do I Need?',
   description:
     'A simple guide to how many Mbps you need for streaming, gaming, video calls, and working from home — by household size and activity.',
-  alternates: { canonical: '/how-much-speed-do-i-need' },
-};
+  path: '/how-much-speed-do-i-need',
+  type: 'article',
+});
 
 const rows = [
   ['Browsing, email, music', '5–10 Mbps'],

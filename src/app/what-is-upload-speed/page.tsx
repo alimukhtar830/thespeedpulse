@@ -1,14 +1,15 @@
-import type { Metadata } from 'next';
 import PageShell from '@/components/PageShell';
 import FaqSection from '@/components/FaqSection';
 import { uploadFaqs } from '@/content/faqs';
+import { pageMeta } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: 'What is Upload Speed?',
   description:
     'Upload speed explained: what it means, how it is measured, why it is often lower than download speed, and how much you need for video calls and cloud backups.',
-  alternates: { canonical: '/what-is-upload-speed' },
-};
+  path: '/what-is-upload-speed',
+  type: 'article',
+});
 
 export default function UploadSpeedPage() {
   return (

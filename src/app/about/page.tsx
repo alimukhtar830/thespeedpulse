@@ -1,12 +1,12 @@
-import type { Metadata } from 'next';
 import PageShell from '@/components/PageShell';
 import { siteConfig } from '@/lib/site';
+import { pageMeta } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: 'About',
   description: `Learn about ${siteConfig.name} — a fast, modern, privacy-friendly internet speed test for measuring download, upload, ping and jitter.`,
-  alternates: { canonical: '/about' },
-};
+  path: '/about',
+});
 
 export default function AboutPage() {
   return (

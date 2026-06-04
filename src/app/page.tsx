@@ -1,15 +1,37 @@
-import type { Metadata } from 'next';
 import Link from 'next/link';
 import Hero from '@/components/Hero';
 import SpeedTestSection from '@/components/SpeedTestSection';
 import GlassCard from '@/components/GlassCard';
 import AdSlot from '@/components/AdSlot';
+import JsonLd from '@/components/JsonLd';
 import { siteConfig } from '@/lib/site';
+import { pageMeta } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: 'Test Your Internet Speed Instantly — Free Speed Test',
   description: siteConfig.description,
-  alternates: { canonical: '/' },
+  path: '/',
+  keywords: [
+    'internet speed test',
+    'speed test',
+    'internet speed check',
+    'wifi speed test',
+    'broadband speed test',
+    'download upload ping test',
+  ],
+});
+
+// SoftwareApplication structured data for the speed-test tool (rich results).
+const softwareSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'SoftwareApplication',
+  name: `${siteConfig.name} Internet Speed Test`,
+  applicationCategory: 'UtilitiesApplication',
+  operatingSystem: 'Web',
+  url: siteConfig.url,
+  description:
+    'Free internet speed test. Measure download, upload, ping and jitter instantly in your browser.',
+  offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD' },
 };
 
 const explainers = [
@@ -42,6 +64,7 @@ const explainers = [
 export default function HomePage() {
   return (
     <>
+      <JsonLd data={softwareSchema} />
       <Hero />
 
       {/* Speed test — the main interactive component */}

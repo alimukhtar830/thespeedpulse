@@ -1,15 +1,16 @@
-import type { Metadata } from 'next';
 import Link from 'next/link';
 import PageShell from '@/components/PageShell';
 import FaqSection from '@/components/FaqSection';
 import { improveFaqs } from '@/content/faqs';
+import { pageMeta } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: 'How to Improve Your Internet Speed (Fix Slow Wi-Fi)',
   description:
     'Practical, proven steps to fix slow internet and get faster Wi-Fi — from router placement and bands to wired connections and when to call your ISP.',
-  alternates: { canonical: '/how-to-improve-internet-speed' },
-};
+  path: '/how-to-improve-internet-speed',
+  type: 'article',
+});
 
 const tips = [
   ['Test wired vs Wi-Fi', 'Plug a device into the router with Ethernet and test. If wired is much faster, the bottleneck is your Wi-Fi, not your plan.'],

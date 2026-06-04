@@ -1,17 +1,17 @@
-import type { Metadata } from 'next';
 import Link from 'next/link';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import GlassCard from '@/components/GlassCard';
 import AdSlot from '@/components/AdSlot';
 import { countries, flagEmoji } from '@/content/performance';
 import { siteConfig } from '@/lib/site';
+import { pageMeta } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: 'Internet Speed by Country — Average Download, Upload & Ping',
   description:
     'Compare typical internet speeds around the world. See average download, upload, and ping by country, and test how your own connection measures up.',
-  alternates: { canonical: '/performance' },
-};
+  path: '/performance',
+});
 
 export default function PerformanceHub() {
   return (

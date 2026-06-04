@@ -1,14 +1,15 @@
-import type { Metadata } from 'next';
 import PageShell from '@/components/PageShell';
 import FaqSection from '@/components/FaqSection';
 import { pingFaqs } from '@/content/faqs';
+import { pageMeta } from '@/lib/seo';
 
-export const metadata: Metadata = {
+export const metadata = pageMeta({
   title: 'What is Ping? (Latency & Jitter Explained)',
   description:
     'Ping explained: what latency means, how it differs from jitter, what counts as a good ping for gaming and calls, and how to lower it.',
-  alternates: { canonical: '/what-is-ping' },
-};
+  path: '/what-is-ping',
+  type: 'article',
+});
 
 export default function PingPage() {
   return (

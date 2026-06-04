@@ -6,6 +6,7 @@ import GlassCard from '@/components/GlassCard';
 import FaqSection from '@/components/FaqSection';
 import { countries, getCountry, flagEmoji } from '@/content/performance';
 import { siteConfig } from '@/lib/site';
+import { pageMeta } from '@/lib/seo';
 
 interface Props {
   params: { country: string };
@@ -19,14 +20,12 @@ export function generateStaticParams() {
 export function generateMetadata({ params }: Props): Metadata {
   const c = getCountry(params.country);
   if (!c) return { title: 'Country not found', robots: { index: false } };
-  const title = `Internet Speed in ${c.name} — Average Download, Upload & Ping`;
-  const description = `Typical internet speed in ${c.name}: about ${c.download} Mbps download, ${c.upload} Mbps upload, and ${c.ping} ms ping. Test your own connection free on ${siteConfig.name}.`;
-  return {
-    title,
-    description,
-    alternates: { canonical: `/performance/${c.slug}` },
-    openGraph: { title, description, type: 'article' },
-  };
+  return pageMeta({
+    title: `Internet Speed in ${c.name} — Average Download, Upload & Ping`,
+    description: `Typical internet speed in ${c.name}: about ${c.download} Mbps download, ${c.upload} Mbps upload, and ${c.ping} ms ping. Test your own connection free on ${siteConfig.name}.`,
+    path: `/performance/${c.slug}`,
+    type: 'article',
+  });
 }
 
 const Stat = ({ label, value, unit, accent }: { label: string; value: number; unit: string; accent: string }) => (
