@@ -21,7 +21,7 @@ export function generateMetadata({ params }: Props): Metadata {
   const city = getCity(params.city);
   if (!city) return { title: 'City not found', robots: { index: false } };
   return pageMeta({
-    title: `Internet Speed in ${city.name} — Speed Test & Averages`,
+    title: `Internet Speed in ${city.name} — Speed Test`,
     description: `Typical internet speed in ${city.name}, ${city.country}: about ${city.download} Mbps download, ${city.upload} Mbps upload, ${city.ping} ms ping. Test your own connection free.`,
     path: `/speed/${city.slug}`,
     type: 'article',

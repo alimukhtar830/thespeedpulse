@@ -7,7 +7,7 @@ import { pageMeta } from '@/lib/seo';
 export const metadata = pageMeta({
   title: 'How SpeedPulse Works — Our Speed Test Methodology',
   description:
-    'The methodology behind the SpeedPulse speed test: how we measure download, upload, ping and jitter, how we ensure accuracy, and what we do (and never do) with your data.',
+    'How the SpeedPulse speed test measures download, upload, ping and jitter — our methodology, how we ensure accuracy, and how we protect your privacy.',
   path: '/how-speedpulse-works',
   type: 'article',
 });

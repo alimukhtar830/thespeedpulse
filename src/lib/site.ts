@@ -7,7 +7,7 @@ export const siteConfig = {
   name: 'SpeedPulse',
   shortName: 'SpeedPulse',
   description:
-    'Test your internet speed instantly. Measure download, upload, ping, jitter, your public IP, ISP, and approximate location with a fast, modern, privacy-friendly speed test.',
+    'Test your internet speed instantly — measure download, upload, ping and jitter, plus your IP, ISP and location. Free, fast and privacy-friendly.',
   // Read from env in production; falls back to localhost for local dev.
   url: process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000',
   locale: 'en_US',

@@ -21,7 +21,7 @@ export function generateMetadata({ params }: Props): Metadata {
   const c = getCountry(params.country);
   if (!c) return { title: 'Country not found', robots: { index: false } };
   return pageMeta({
-    title: `Internet Speed in ${c.name} — Average Download, Upload & Ping`,
+    title: `${c.name} Internet Speed — Averages & Test`,
     description: `Typical internet speed in ${c.name}: about ${c.download} Mbps download, ${c.upload} Mbps upload, and ${c.ping} ms ping. Test your own connection free on ${siteConfig.name}.`,
     path: `/performance/${c.slug}`,
     type: 'article',

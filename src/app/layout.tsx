@@ -16,7 +16,9 @@ export const metadata: Metadata = {
   metadataBase: new URL(siteConfig.url),
   title: {
     default: `${siteConfig.name} — Test Your Internet Speed Instantly`,
-    template: `%s | ${siteConfig.name}`,
+    // No brand suffix — keeps titles under ~60 chars (Bing/Google flagged
+    // "title too long"); search engines append the site name themselves.
+    template: '%s',
   },
   description: siteConfig.description,
   applicationName: siteConfig.name,

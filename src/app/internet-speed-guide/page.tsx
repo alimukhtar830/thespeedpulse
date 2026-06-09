@@ -7,7 +7,7 @@ import { pageMeta } from '@/lib/seo';
 export const metadata = pageMeta({
   title: 'Internet Speed Guide — How Much Speed Do You Need?',
   description:
-    'Understand internet speeds: what download, upload, ping and jitter mean, how many Mbps you need for streaming, gaming and work, and how to get accurate results.',
+    'What download, upload, ping and jitter mean, how many Mbps you need for streaming, gaming and work, and how to read your speed-test results.',
   path: '/internet-speed-guide',
   type: 'article',
 });

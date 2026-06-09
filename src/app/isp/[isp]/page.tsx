@@ -21,8 +21,8 @@ export function generateMetadata({ params }: Props): Metadata {
   const isp = getIsp(params.isp);
   if (!isp) return { title: 'Provider not found', robots: { index: false } };
   return pageMeta({
-    title: `${isp.name} Speed Test — Is ${isp.name} Fast?`,
-    description: `Test your ${isp.name} internet speed and compare it to the typical for ${isp.name} (${isp.country}): about ${isp.download} Mbps download, ${isp.upload} Mbps upload, ${isp.ping} ms ping.`,
+    title: `${isp.name} Speed Test — Is It Fast?`,
+    description: `Test your ${isp.name} speed and compare to the typical in ${isp.country}: ~${isp.download} Mbps down, ${isp.upload} up, ${isp.ping} ms ping. Free & instant.`,
     path: `/isp/${isp.slug}`,
     type: 'article',
   });
