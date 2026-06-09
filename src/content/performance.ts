@@ -66,3 +66,23 @@ export function flagEmoji(code: string): string {
     .toUpperCase()
     .replace(/./g, (ch) => String.fromCodePoint(127397 + ch.charCodeAt(0)));
 }
+
+/** Global median download across the dataset (for per-page comparisons). */
+export const globalMedianDownload = (() => {
+  const sorted = countries.map((c) => c.download).sort((a, b) => a - b);
+  const mid = Math.floor(sorted.length / 2);
+  return sorted.length % 2 ? sorted[mid] : Math.round((sorted[mid - 1] + sorted[mid]) / 2);
+})();
+
+/** Rank of a country by download (1 = fastest) and the total count. */
+export function countryRank(slug: string): { rank: number; total: number } {
+  const sorted = [...countries].sort((a, b) => b.download - a.download);
+  return { rank: sorted.findIndex((c) => c.slug === slug) + 1, total: sorted.length };
+}
+
+/** Bucket a download figure into a descriptive tier. */
+export function speedTier(download: number): 'fast' | 'mid' | 'developing' {
+  if (download >= 150) return 'fast';
+  if (download >= 50) return 'mid';
+  return 'developing';
+}

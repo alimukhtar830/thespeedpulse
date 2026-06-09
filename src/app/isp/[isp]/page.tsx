@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import GlassCard from '@/components/GlassCard';
 import FaqSection from '@/components/FaqSection';
-import { isps, getIsp } from '@/content/isps';
+import { isps, getIsp, ispCountryRank, connectionTypeInfo } from '@/content/isps';
 import { flagEmoji } from '@/content/performance';
 import { siteConfig } from '@/lib/site';
 import { pageMeta } from '@/lib/seo';
@@ -43,6 +43,15 @@ export default function IspPage({ params }: Props) {
   if (!isp) notFound();
 
   const others = isps.filter((i) => i.slug !== isp.slug && i.country === isp.country).slice(0, 6);
+
+  // Per-ISP computed context so each page is genuinely unique.
+  const { rank, total } = ispCountryRank(isp.slug);
+  const ordinal = (n: number) =>
+    n + (['th', 'st', 'nd', 'rd'][(n % 100 - 20) % 10] || ['th', 'st', 'nd', 'rd'][n] || 'th');
+  const rankText =
+    total > 1
+      ? `Among the ${total} ${isp.country} providers we track, ${isp.name} ranks ${ordinal(rank)} for typical download speed.`
+      : '';
 
   const faqs = [
     {
@@ -97,6 +106,14 @@ export default function IspPage({ params }: Props) {
             <strong>{isp.ping} ms</strong>. These are representative reference
             figures — run the test above to see exactly what your line delivers.
           </p>
+
+          <h2 className="text-xl font-bold text-white">
+            What to expect from {isp.name} ({isp.type})
+          </h2>
+          <p>
+            {connectionTypeInfo[isp.type]} {rankText}
+          </p>
+
           <p>
             Getting less than expected? Compare wired vs Wi-Fi, then see{' '}
             <Link href="/why-is-my-internet-slow" className="text-cyan-400 hover:underline">

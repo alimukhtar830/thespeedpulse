@@ -53,3 +53,13 @@ export function citiesByCountry(): Record<string, City[]> {
   for (const c of cityList) (map[c.country] ??= []).push(c);
   return map;
 }
+
+/** Rank a city by download among the cities we track in the same country. */
+export function cityCountryRank(slug: string): { rank: number; total: number } {
+  const city = getCity(slug);
+  if (!city) return { rank: 0, total: 0 };
+  const peers = cityList
+    .filter((c) => c.country === city.country)
+    .sort((a, b) => b.download - a.download);
+  return { rank: peers.findIndex((c) => c.slug === slug) + 1, total: peers.length };
+}

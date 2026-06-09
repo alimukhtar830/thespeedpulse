@@ -4,7 +4,14 @@ import { notFound } from 'next/navigation';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import GlassCard from '@/components/GlassCard';
 import FaqSection from '@/components/FaqSection';
-import { countries, getCountry, flagEmoji } from '@/content/performance';
+import {
+  countries,
+  getCountry,
+  flagEmoji,
+  countryRank,
+  speedTier,
+  globalMedianDownload,
+} from '@/content/performance';
 import { siteConfig } from '@/lib/site';
 import { pageMeta } from '@/lib/seo';
 
@@ -43,6 +50,19 @@ export default function CountryPage({ params }: Props) {
   if (!c) notFound();
 
   const others = countries.filter((x) => x.slug !== c.slug).slice(0, 8);
+
+  // Computed, per-country context so each page is genuinely differentiated.
+  const { rank, total } = countryRank(c.slug);
+  const tier = speedTier(c.download);
+  const aboveGlobal = c.download >= globalMedianDownload;
+  const diffPct = globalMedianDownload
+    ? Math.round((Math.abs(c.download - globalMedianDownload) / globalMedianDownload) * 100)
+    : 0;
+  const tierText: Record<typeof tier, string> = {
+    fast: `${c.name} has a well-developed broadband market. Widespread fibre keeps typical speeds high, comfortably handling 4K streaming, online gaming, video calls and busy multi-device households.`,
+    mid: `${c.name} sits mid-table globally. Fibre is expanding in cities while many homes still run on cable, DSL or fixed-wireless, so real-world speeds vary widely by area and provider — choosing a fibre plan where available makes the biggest difference.`,
+    developing: `Broadband in ${c.name} is still maturing. Many users rely on DSL or mobile/4G, and fibre is concentrated in major cities, so speeds vary a lot. Where fibre is available it dramatically outperforms DSL and mobile.`,
+  };
 
   const faqs = [
     {
@@ -93,10 +113,39 @@ export default function CountryPage({ params }: Props) {
             <strong>{c.ping} ms</strong>. These are representative reference
             figures — your real speed depends on your provider, plan, and setup.
           </p>
+          <h2 className="text-xl font-bold text-white">
+            How {c.name} compares globally
+          </h2>
           <p>
-            Want to know exactly how your line performs? Run a free, instant test
-            and compare your numbers to the {c.name} typical above.
+            In our dataset of {total} countries, {c.name} ranks{' '}
+            <strong>#{rank} of {total}</strong> for typical download speed — that&apos;s{' '}
+            {aboveGlobal ? 'above' : 'below'} the global median of{' '}
+            <strong>{globalMedianDownload} Mbps</strong>
+            {diffPct > 0 ? ` (roughly ${diffPct}% ${aboveGlobal ? 'higher' : 'lower'})` : ''}.{' '}
+            {tierText[tier]}
           </p>
+
+          <h2 className="text-xl font-bold text-white">
+            What affects internet speed in {c.name}
+          </h2>
+          <p>
+            Your real speed depends far more on your setup than the national
+            average: the connection type ({''}
+            <Link href="/wifi-vs-ethernet" className="text-cyan-400 hover:underline">
+              wired vs Wi-Fi
+            </Link>
+            ), your provider and plan, distance to the exchange, and peak-time
+            congestion. To get the most from your line, see{' '}
+            <Link href="/how-to-improve-internet-speed" className="text-cyan-400 hover:underline">
+              how to improve your internet speed
+            </Link>{' '}
+            and check what you actually need in our{' '}
+            <Link href="/how-much-speed-do-i-need" className="text-cyan-400 hover:underline">
+              speed requirements guide
+            </Link>
+            .
+          </p>
+
           <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-6 text-center">
             <p className="text-lg font-semibold text-white">
               Test your internet speed in {c.name}

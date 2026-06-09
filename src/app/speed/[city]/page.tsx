@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import GlassCard from '@/components/GlassCard';
 import FaqSection from '@/components/FaqSection';
-import { cities, getCity } from '@/content/cities';
+import { cities, getCity, cityCountryRank } from '@/content/cities';
 import { flagEmoji } from '@/content/performance';
 import { siteConfig } from '@/lib/site';
 import { pageMeta } from '@/lib/seo';
@@ -43,6 +43,20 @@ export default function CityPage({ params }: Props) {
   if (!city) notFound();
 
   const others = cities.filter((c) => c.slug !== city.slug && c.country === city.country).slice(0, 6);
+
+  // Per-city computed context for uniqueness.
+  const { rank, total } = cityCountryRank(city.slug);
+  const peers = cities.filter((c) => c.country === city.country);
+  const countryAvg = Math.round(
+    peers.reduce((s, c) => s + c.download, 0) / Math.max(1, peers.length),
+  );
+  const vsAvg = city.download - countryAvg;
+  const compareText =
+    total > 1
+      ? `Among the ${total} ${city.country} cities we track, ${city.name} ranks #${rank}, with typical download ${
+          Math.abs(vsAvg) <= 3 ? 'about in line with' : vsAvg > 0 ? `above` : `below`
+        } the ${city.country} city average of ~${countryAvg} Mbps.`
+      : '';
 
   const faqs = [
     {
@@ -96,6 +110,26 @@ export default function CityPage({ params }: Props) {
             <strong>{city.ping} ms</strong>. These are representative figures —
             your real speed depends on your provider and plan.
           </p>
+
+          {compareText && (
+            <>
+              <h2 className="text-xl font-bold text-white">
+                How {city.name} compares
+              </h2>
+              <p>
+                {compareText} Urban areas usually see higher speeds than the
+                national average thanks to denser fibre and cable coverage, while
+                outlying neighbourhoods may still rely on DSL or fixed-wireless.
+                The provider you choose matters more than the city average — see
+                which connection types are fastest on the{' '}
+                <Link href="/isp" className="text-cyan-400 hover:underline">
+                  ISP comparison
+                </Link>
+                .
+              </p>
+            </>
+          )}
+
           <p>
             Compare providers on the{' '}
             <Link href="/isp" className="text-cyan-400 hover:underline">

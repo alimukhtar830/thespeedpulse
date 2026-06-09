@@ -61,3 +61,25 @@ export function ispsByCountry(): Record<string, Isp[]> {
   for (const i of ispList) (map[i.country] ??= []).push(i);
   return map;
 }
+
+/** Rank an ISP by download speed among the providers we track in its country. */
+export function ispCountryRank(slug: string): { rank: number; total: number } {
+  const isp = getIsp(slug);
+  if (!isp) return { rank: 0, total: 0 };
+  const peers = ispList
+    .filter((i) => i.country === isp.country)
+    .sort((a, b) => b.download - a.download);
+  return { rank: peers.findIndex((i) => i.slug === slug) + 1, total: peers.length };
+}
+
+/** Plain-English explanation of each connection type (unique per ISP type). */
+export const connectionTypeInfo: Record<Isp['type'], string> = {
+  Fiber:
+    'Fibre delivers the fastest, most reliable home internet — high download AND upload speeds with low latency, ideal for 4K streaming, gaming, video calls and large households.',
+  Cable:
+    'Cable offers strong download speeds but typically much lower upload, and speeds can dip during peak evening hours when the local node is shared.',
+  DSL:
+    'DSL runs over copper phone lines, so speeds drop the further you are from the exchange and are usually lower than fibre or cable — fine for browsing and HD streaming.',
+  'Mobile / 5G':
+    'Mobile / 5G home internet is quick to set up and flexible, but speeds and latency vary with signal strength, tower load and your location.',
+};
