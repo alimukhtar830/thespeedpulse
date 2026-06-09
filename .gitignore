@@ -41,5 +41,4 @@ next-env.d.ts
 
 # internal docs (e.g. competitor analysis, audits) — not for the public repo
 *.pdf
-*_audit*.md
-*_seo_audit*.md
+*audit*.md
