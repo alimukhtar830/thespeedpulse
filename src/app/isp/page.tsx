@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import GlassCard from '@/components/GlassCard';
 import AdSlot from '@/components/AdSlot';
+import DataNote from '@/components/DataNote';
 import { ispsByCountry } from '@/content/isps';
 import { flagEmoji } from '@/content/performance';
 import { pageMeta } from '@/lib/seo';
@@ -70,15 +71,9 @@ export default function IspHub() {
         ))}
       </div>
 
-      <p className="mx-auto mt-10 max-w-3xl text-center text-xs text-slate-500">
-        Figures are approximate, representative typical speeds for general
-        comparison. Your actual speed depends on your plan, location and network
-        conditions — run a{' '}
-        <Link href="/" className="text-cyan-400 hover:underline">
-          free speed test
-        </Link>{' '}
-        to measure it.
-      </p>
+      <div className="mx-auto mt-10 max-w-3xl">
+        <DataNote />
+      </div>
     </main>
   );
 }

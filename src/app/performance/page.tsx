@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import GlassCard from '@/components/GlassCard';
 import AdSlot from '@/components/AdSlot';
+import DataNote from '@/components/DataNote';
 import { countries, flagEmoji } from '@/content/performance';
 import { siteConfig } from '@/lib/site';
 import { pageMeta } from '@/lib/seo';
@@ -72,15 +73,9 @@ export default function PerformanceHub() {
         ))}
       </section>
 
-      <p className="mx-auto mt-10 max-w-3xl text-center text-xs text-slate-500">
-        Figures are approximate, representative values for typical fixed-broadband
-        connections and are provided for general comparison. Your actual speed
-        depends on your plan, provider, and network conditions — run a{' '}
-        <Link href="/" className="text-cyan-400 hover:underline">
-          free speed test
-        </Link>{' '}
-        on {siteConfig.name} to measure it.
-      </p>
+      <div className="mx-auto mt-10 max-w-3xl">
+        <DataNote />
+      </div>
     </main>
   );
 }

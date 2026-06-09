@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import GlassCard from '@/components/GlassCard';
 import FaqSection from '@/components/FaqSection';
+import DataNote from '@/components/DataNote';
 import { cities, getCity, cityCountryRank } from '@/content/cities';
 import { flagEmoji } from '@/content/performance';
 import { siteConfig } from '@/lib/site';
@@ -172,10 +173,7 @@ export default function CityPage({ params }: Props) {
           <FaqSection items={faqs} />
         </div>
 
-        <p className="mt-10 text-xs text-slate-500">
-          Figures are approximate, representative typical speeds for general
-          comparison only.
-        </p>
+        <DataNote />
       </div>
     </main>
   );

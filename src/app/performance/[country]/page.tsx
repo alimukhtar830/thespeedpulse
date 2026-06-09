@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import GlassCard from '@/components/GlassCard';
 import FaqSection from '@/components/FaqSection';
+import DataNote from '@/components/DataNote';
 import {
   countries,
   getCountry,
@@ -181,10 +182,7 @@ export default function CountryPage({ params }: Props) {
           <FaqSection items={faqs} />
         </div>
 
-        <p className="mt-10 text-xs text-slate-500">
-          Figures are approximate, representative values for typical fixed-broadband
-          connections, provided for general comparison only.
-        </p>
+        <DataNote />
       </div>
     </main>
   );

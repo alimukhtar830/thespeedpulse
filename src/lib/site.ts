@@ -21,6 +21,8 @@ export const siteConfig = {
   updatedISO: '2026-06-04',
   // Google Tag Manager container (manage GA4 / pixels / conversions from GTM).
   gtmId: process.env.NEXT_PUBLIC_GTM_ID ?? 'GTM-KR8Q2QJK',
+  // When the country/ISP/city reference figures were last reviewed.
+  dataReviewed: 'June 2026',
 } as const;
 
 /** Primary navigation links (also used to build the sitemap). */

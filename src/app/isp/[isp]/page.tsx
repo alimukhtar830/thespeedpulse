@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import GlassCard from '@/components/GlassCard';
 import FaqSection from '@/components/FaqSection';
+import DataNote from '@/components/DataNote';
 import { isps, getIsp, ispCountryRank, connectionTypeInfo } from '@/content/isps';
 import { flagEmoji } from '@/content/performance';
 import { siteConfig } from '@/lib/site';
@@ -156,10 +157,7 @@ export default function IspPage({ params }: Props) {
           <FaqSection items={faqs} />
         </div>
 
-        <p className="mt-10 text-xs text-slate-500">
-          Figures are approximate, representative typical speeds for general
-          comparison only and are not affiliated with or endorsed by {isp.name}.
-        </p>
+        <DataNote extra={`Not affiliated with or endorsed by ${isp.name}.`} />
       </div>
     </main>
   );
